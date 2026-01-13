@@ -1,0 +1,510 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Paleta de colores */
+    --space-indigo: #22223B;
+    --honeydew: #D9E5D6;
+    --grapefruit-pink: #FF6B6B;
+    --dark-cyan: #06908F;
+    
+    /* Variables de uso */
+    --bg-dark: var(--space-indigo);
+    --bg-light: var(--honeydew);
+    --text-dark: var(--space-indigo);
+    --text-light: #ffffff;
+    --accent-primary: var(--grapefruit-pink);
+    --accent-secondary: var(--dark-cyan);
+    --gray: #666666;
+    --gray-light: #e5e5e5;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* Header */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: rgba(217, 229, 214, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(34, 34, 59, 0.1);
+}
+
+.nav {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    color: var(--text-dark);
+    transition: color 0.3s;
+}
+
+.logo:hover {
+    color: var(--accent-primary);
+}
+
+.nav-links {
+    display: flex;
+    gap: 2.5rem;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-dark);
+    font-weight: 500;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: var(--accent-primary);
+}
+
+/* Hero Section */
+.hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background: linear-gradient(135deg, var(--honeydew) 0%, rgba(217, 229, 214, 0.8) 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-brand {
+    font-family: 'Bagel Fat One', cursive;
+    font-size: clamp(6rem, 25vw, 20rem);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    color: var(--text-dark);
+    margin: 0;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+/* Services Overview */
+.services-overview {
+    padding: 10rem 2rem 8rem;
+    background-color: var(--bg-light);
+}
+
+.section-title {
+    margin-bottom: 5rem;
+    position: relative;
+}
+
+.section-title {
+    position: relative;
+}
+
+.section-title h2 {
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    color: var(--text-dark);
+    margin: 0;
+}
+
+.section-title h2:nth-child(2) {
+    position: absolute;
+    top: 0.15em;
+    left: 0.08em;
+    color: rgba(0, 0, 0, 0.15);
+    z-index: -1;
+}
+
+.services-grid {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 3rem;
+}
+
+.service-card {
+    padding: 2rem 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-4px);
+}
+
+.service-card h3 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--text-dark);
+    letter-spacing: -0.01em;
+    transition: color 0.3s;
+}
+
+.service-card:hover h3 {
+    color: var(--accent-secondary);
+}
+
+.service-card p {
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
+    line-height: 1.6;
+    color: var(--gray);
+    font-weight: 400;
+}
+
+/* About Section */
+.about {
+    padding: 10rem 2rem 8rem;
+    background-color: var(--space-indigo);
+    color: var(--text-light);
+}
+
+.about-content {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.about .section-title h2 {
+    color: var(--text-light);
+}
+
+.about .section-title h2:nth-child(2) {
+    color: rgba(255, 255, 255, 0.08);
+    top: 0.12em;
+    left: 0.06em;
+}
+
+.about-text {
+    max-width: 900px;
+    margin-top: 4rem;
+}
+
+.about-text p {
+    font-size: clamp(1.125rem, 2vw, 1.5rem);
+    line-height: 1.85;
+    margin-bottom: 2.5rem;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.about-text p:first-child {
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    font-weight: 500;
+    margin-bottom: 2rem;
+}
+
+/* Services Detailed */
+.services-detailed {
+    padding: 10rem 2rem 8rem;
+    background-color: var(--bg-light);
+}
+
+.services-list {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.service-item {
+    display: flex;
+    gap: 4rem;
+    margin-bottom: 8rem;
+    align-items: flex-start;
+}
+
+.service-item:last-child {
+    margin-bottom: 0;
+}
+
+.service-number {
+    font-size: clamp(4rem, 8vw, 8rem);
+    font-weight: 900;
+    line-height: 1;
+    color: var(--text-dark);
+    opacity: 0.2;
+    flex-shrink: 0;
+}
+
+.service-content {
+    flex: 1;
+}
+
+.service-content h3 {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: 700;
+    margin-bottom: 2.5rem;
+    color: var(--text-dark);
+    letter-spacing: -0.01em;
+    transition: color 0.3s;
+}
+
+.service-item:hover .service-content h3 {
+    color: var(--accent-secondary);
+}
+
+.service-content ul {
+    list-style: none;
+}
+
+.service-content li {
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    line-height: 1.8;
+    color: var(--gray);
+    margin-bottom: 0.75rem;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.service-content li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--accent-primary);
+    font-weight: bold;
+}
+
+/* Brands Section */
+.brands {
+    padding: 10rem 2rem 8rem;
+    background-color: var(--bg-light);
+}
+
+.brands-intro {
+    max-width: 1400px;
+    margin: 0 auto 4rem;
+    font-size: clamp(1.125rem, 2vw, 1.5rem);
+    color: var(--gray);
+    font-weight: 400;
+}
+
+.brands-grid {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 3rem;
+}
+
+.brand-item {
+    padding: 2rem 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.brand-item:hover {
+    transform: translateY(-3px);
+}
+
+.brand-item h3 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--text-dark);
+}
+
+.brand-item p {
+    font-size: clamp(0.9rem, 1.5vw, 1rem);
+    color: var(--gray);
+    line-height: 1.6;
+}
+
+/* Contact Section */
+.contact {
+    padding: 10rem 2rem 8rem;
+    background-color: var(--space-indigo);
+    color: var(--text-light);
+}
+
+.contact .section-title h2 {
+    color: var(--text-light);
+}
+
+.contact .section-title h2:nth-child(2) {
+    color: rgba(255, 255, 255, 0.08);
+    top: 0.12em;
+    left: 0.06em;
+}
+
+.contact-info {
+    max-width: 1400px;
+    margin: 4rem auto 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 4rem;
+}
+
+.contact-person h3 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--text-light);
+}
+
+.contact-person p {
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 0.5rem;
+}
+
+.contact-person a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.contact-person a:hover {
+    color: var(--grapefruit-pink);
+}
+
+/* WhatsApp Float Button */
+.whatsapp-float {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 60px;
+    height: 60px;
+    background-color: var(--accent-secondary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(6, 144, 143, 0.3);
+    z-index: 999;
+    transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+    color: white;
+}
+
+.whatsapp-float:hover {
+    transform: scale(1.1);
+    background-color: var(--accent-primary);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+}
+
+.whatsapp-float svg {
+    width: 28px;
+    height: 28px;
+}
+
+/* Footer */
+.footer {
+    padding: 4rem 2rem;
+    background-color: var(--space-indigo);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-content {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.footer .logo {
+    color: var(--text-light);
+    opacity: 0.6;
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+    .nav {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: center;
+    }
+
+    .hero {
+        padding: 6rem 1rem 2rem;
+    }
+
+    .services-overview,
+    .about,
+    .services-detailed,
+    .brands,
+    .contact {
+        padding: 4rem 1rem;
+    }
+
+    .service-item {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .whatsapp-float {
+        bottom: 1.5rem;
+        right: 1.5rem;
+        width: 56px;
+        height: 56px;
+    }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.service-card,
+.service-item,
+.brand-item {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Scroll animations */
+.fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
