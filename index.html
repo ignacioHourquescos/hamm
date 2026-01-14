@@ -4,81 +4,125 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HAMM - Agencia Comercial 360°</title>
-    <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Bagel+Fat+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <nav class="nav">
-            <div class="logo">HAMM</div>
-            <div class="nav-links">
-                <a href="#home">HOME</a>
-                <a href="#servicios">SERVICIOS</a>
-                <a href="#nosotros">QUIÉNES SOMOS</a>
-                <a href="#marcas">MARCAS</a>
-                <a href="#contacto">CONTACTO</a>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <h1>HAMM</h1>
             </div>
-        </nav>
-    </header>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#servicios">Servicios</a></li>
+                <li><a href="#quienes-somos">Quiénes Somos</a></li>
+                <li><a href="#marcas">Marcas</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+            <div class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
 
     <!-- Hero Section -->
     <section id="home" class="hero">
+        <div class="hero-bg-pattern"></div>
         <div class="hero-content">
-            <h1 class="hero-brand">HAMM</h1>
+            <h1 class="hero-title">HAMM</h1>
+            <p class="hero-subtitle">Estrategia y ejecución comercial en punto de venta</p>
+   
+            <p class="hero-services"></p>
+            <a href="#contacto" class="hero-cta-button">Agendar una reunión</a>
+        </div>
+
+        <div class="hero-brackets">
+            <div class="bracket bracket-top-left"></div>
+            <div class="bracket bracket-top-right"></div>
+            <div class="bracket bracket-bottom-left"></div>
+            <div class="bracket bracket-bottom-right"></div>
         </div>
     </section>
 
-    <!-- Qué hacemos -->
-    <section class="services-overview">
-        <div class="section-title">
-            <h2>Qué hacemos</h2>
-            <h2>Qué hacemos</h2>
-        </div>
-        <div class="services-grid">
-            <div class="service-card">
-                <h3>Representación Comercial</h3>
-                <p>Abrimos puertas, desarrollamos cartera y gestionamos clientes con un enfoque profesional, humano y estratégico.</p>
+    <!-- Qué Hacemos Section -->
+    <section id="que-hacemos" class="que-hacemos">
+        <div class="container">
+            <div class="que-hacemos-header">
+                <span class="que-hacemos-label">SERVICIOS</span>
+                <h2 class="que-hacemos-title">Qué hacemos</h2>
             </div>
-            <div class="service-card">
-                <h3>Trade Marketing</h3>
-                <p>Maximizamos la visibilidad y ejecución en punto de venta a través de activaciones, relevamientos y exhibiciones efectivas.</p>
-            </div>
-            <div class="service-card">
-                <h3>Producción POP</h3>
-                <p>Diseñamos y fabricamos materiales que venden: exhibidores, carteles, stoppers, gráfica, colgantes, mini stands, mobiliario etc.</p>
-            </div>
-            <div class="service-card">
-                <h3>Consumo masivo</h3>
-                <p>Representamos y comercializamos productos de consumo masivo orientando la marca y el producto al canal óptimo y adecuado.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Quiénes somos -->
-    <section id="nosotros" class="about">
-        <div class="about-content">
-            <div class="section-title">
-                <h2>Quiénes somos</h2>
-                <h2>Quiénes somos</h2>
-            </div>
-            <div class="about-text">
-                <p>En HAMM creemos en las alianzas que transforman negocios.</p>
-                <p>No solo vendemos: analizamos, diseñamos, ejecutamos y acompañamos cada proyecto como si fuera propio. Con una visión enfocada a resultados y apoyados a través de herramientas de IA. En HAMM abordamos la estrategia y la representación de tu marca de manera global y efectiva.</p>
-                <p>Nuestra experiencia en Trade, nuestra red comercial y nuestra capacidad de producción POP nos permiten ofrecer soluciones integrales. Somos un socio estratégico para marcas que buscan crecer con presencia, planificación y resultados medibles.</p>
-                <p>HAMM es Hernán Andrés Mendizabal Moller, una visión comercial construida sobre profesionalismo, cercanía y compromiso. Fundada por Andrés Moller y Hernán Mendizabal con amplia trayectoria en consumo masivo, trade marketing.</p>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon-wrapper">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3>Representación Comercial</h3>
+                    <p>Abrimos puertas, desarrollamos cartera y gestionamos clientes con un enfoque profesional, humano y estratégico.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon-wrapper">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <h3>Trade Marketing</h3>
+                    <p>Maximizamos la visibilidad y ejecución en punto de venta a través de activaciones, relevamientos y exhibiciones efectivas.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon-wrapper">
+                        <i class="fas fa-tag"></i>
+                    </div>
+                    <h3>Producción POP</h3>
+                    <p>Diseñamos y fabricamos materiales que venden: exhibidores, carteles, stoppers, gráfica, colgantes, mini stands, mobiliario etc.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon-wrapper">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <h3>Consumo masivo</h3>
+                    <p>Representamos y comercializamos productos de consumo masivo orientando la marca y el producto al canal óptimo y adecuado.</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Servicios detallados -->
-    <section id="servicios" class="services-detailed">
-        <div class="services-list">
-            <div class="service-item">
-                <div class="service-number">1</div>
-                <div class="service-content">
+    <!-- Quiénes Somos Section -->
+    <section id="quienes-somos" class="quienes-somos">
+        <div class="container">
+            <div class="quienes-somos-header">
+                <span class="quienes-somos-label">NOSOTROS</span>
+                <h2 class="section-title">Quiénes Somos</h2>
+            </div>
+            <div class="about-content">
+                <p class="lead">
+                    En HAMM creemos en las <span>alianzas que transforman</span> negocios.
+                </p>
+                <p>
+                    No solo vendemos: analizamos, diseñamos, ejecutamos y acompañamos cada proyecto como si fuera propio. Con una visión enfocada a resultados y apoyados a través de herramientas de IA. En HAMM abordamos la estrategia y la representación de tu marca de manera global y efectiva.
+                </p>
+                <p>
+                    Nuestra experiencia en Trade, nuestra red comercial y nuestra capacidad de producción POP nos permiten ofrecer soluciones integrales. Somos un socio estratégico para marcas que buscan crecer con presencia, planificación y resultados medibles.
+                </p>
+                <div class="about-highlight">
+                    <p>
+                        <strong>HAMM</strong> es Hernán Andrés Mendizabal Moller, una visión comercial construida sobre profesionalismo, cercanía y compromiso. Fundada por <span class="highlight-name">Andrés Moller</span> y <span class="highlight-name">Hernán Mendizabal</span> con amplia trayectoria en consumo masivo, trade marketing.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Servicios Detallados Section -->
+    <section id="servicios" class="servicios-detallados">
+        <div class="container">
+            <h2 class="section-title">Servicios</h2>
+            <div class="servicios-list">
+                <div class="servicio-item">
                     <h3>Representación Comercial</h3>
                     <ul>
                         <li>Desarrollo y gestión de cartera</li>
@@ -87,10 +131,7 @@
                         <li>Reportes y análisis de ventas</li>
                     </ul>
                 </div>
-            </div>
-            <div class="service-item">
-                <div class="service-number">2</div>
-                <div class="service-content">
+                <div class="servicio-item">
                     <h3>Trade Marketing</h3>
                     <ul>
                         <li>Relevamiento y ejecución en PDV</li>
@@ -99,10 +140,7 @@
                         <li>Auditoría de materiales POP</li>
                     </ul>
                 </div>
-            </div>
-            <div class="service-item">
-                <div class="service-number">3</div>
-                <div class="service-content">
+                <div class="servicio-item">
                     <h3>Producción POP</h3>
                     <ul>
                         <li>Diseño creativo y prototipado</li>
@@ -111,10 +149,7 @@
                         <li>Entrega en punto o logística al distribuidor</li>
                     </ul>
                 </div>
-            </div>
-            <div class="service-item">
-                <div class="service-number">4</div>
-                <div class="service-content">
+                <div class="servicio-item">
                     <h3>Comercialización de bebidas</h3>
                     <ul>
                         <li>Venta consultiva a restaurantes, vinotecas y caterings</li>
@@ -126,61 +161,102 @@
         </div>
     </section>
 
-    <!-- Marcas -->
-    <section id="marcas" class="brands">
-        <div class="section-title">
-            <h2>Marcas</h2>
-            <h2>Marcas</h2>
-        </div>
-        <p class="brands-intro">Representamos a marcas que buscan expansión sostenida, visibilidad y una ejecución impecable.</p>
-        <div class="brands-grid">
-            <div class="brand-item">
-                <h3>Bodega Luis Segundo Correas</h3>
-                <p>Una bodega boutique mendocina con más de cien años de tradición y vinos de alta calidad</p>
+    <!-- Marcas Section -->
+    <section id="marcas" class="marcas">
+        <div class="container">
+            <div class="quienes-somos-header">
+                <span class="quienes-somos-label">PARTNERS</span>
+                <h2 class="section-title">Marcas</h2>
             </div>
-            <div class="brand-item">
-                <h3>Ueno</h3>
-            </div>
-            <div class="brand-item">
-                <h3>M Estruturas</h3>
-            </div>
-            <div class="brand-item">
-                <h3>Young Bloody</h3>
-                <p>TBD</p>
+            <p class="marcas-intro">
+                Representamos a marcas que buscan expansión sostenida, visibilidad y una ejecución impecable.
+            </p>
+            <div class="marcas-grid">
+                <div class="marca-card">
+                    <div class="marca-icon">
+                        <i class="fas fa-wine-bottle"></i>
+                    </div>
+                    <h3>Bodega Luis Segundo Correas</h3>
+                    <p>Una bodega boutique mendocina con más de cien años de tradición y vinos de alta calidad</p>
+                </div>
+                <div class="marca-card">
+                    <div class="marca-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3>Ueno</h3>
+                </div>
+                <div class="marca-card">
+                    <div class="marca-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3>M Estruturas</h3>
+                </div>
+                <div class="marca-card">
+                    <div class="marca-icon">
+                        <i class="fas fa-wrench"></i>
+                    </div>
+                    <h3>Young Bloody</h3>
+                    <p class="tbd">TBD</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Contacto -->
-    <section id="contacto" class="contact">
-        <div class="section-title">
-            <h2>Hablamos?</h2>
-            <h2>Hablamos?</h2>
-        </div>
-        <div class="contact-info">
-            <div class="contact-person">
-                <h3>Andrés Moller</h3>
-                <p>+54 911 5471 3868</p>
-                <p><a href="mailto:amoller@hamm.com.ar">amoller@hamm.com.ar</a></p>
+    <!-- Contacto Section -->
+    <section id="contacto" class="contacto">
+        <div class="container">
+            <div class="quienes-somos-header" style="text-align: center;">
+                <span class="quienes-somos-label" style="color: var(--grapefruit-pink);">CONECTEMOS</span>
+                <h2 class="section-title" style="text-align: center;">¿Hablamos?</h2>
             </div>
-            <div class="contact-person">
-                <h3>Hernán Mendizabal</h3>
-                <p>+54 911 5848 7984</p>
-                <p><a href="mailto:h.mendizabal@hamm.com.ar">h.mendizabal@hamm.com.ar</a></p>
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <h3>Andrés Moller</h3>
+                    <div class="contact-info">
+                        <a href="tel:+5491154713868">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <span>+54 911 5471 3868</span>
+                        </a>
+                        <a href="mailto:amoller@hamm.com.ar">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <span>amoller@hamm.com.ar</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="contact-card">
+                    <h3>Hernán Mendizabal</h3>
+                    <div class="contact-info">
+                        <a href="tel:+5491158487984">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <span>+54 911 5848 7984</span>
+                        </a>
+                        <a href="mailto:h.mendizabal@hamm.com.ar">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <span>h.mendizabal@hamm.com.ar</span>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- WhatsApp Float Button -->
     <a href="https://wa.me/5491154713868" class="whatsapp-float" target="_blank" aria-label="Contactar por WhatsApp">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" fill="currentColor"/>
-        </svg>
+        <i class="fab fa-whatsapp"></i>
     </a>
 
+    <!-- Footer -->
     <footer class="footer">
-        <div class="footer-content">
-            <div class="logo">HAMM</div>
+        <div class="container">
+            <p>&copy; 2024 HAMM - Agencia Comercial 360°. Todos los derechos reservados.</p>
         </div>
     </footer>
 
