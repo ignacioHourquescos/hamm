@@ -444,6 +444,7 @@ section {
     font-family: 'Bagel Fat One', cursive;
     letter-spacing: -0.02em;
     line-height: 1.1;
+    font-weight: 100;
 }
 
 .quienes-somos-header {
@@ -832,7 +833,7 @@ section {
     }
 
     .hero-title {
-        font-size: clamp(3.5rem, 12vw, 6.5rem);
+        font-size: clamp(5rem, 18vw, 8rem);
     }
 
     .bracket {
@@ -900,7 +901,7 @@ section {
 
 @media (max-width: 480px) {
     .hero-title {
-        font-size: clamp(2.5rem, 10vw, 5rem);
+        font-size: clamp(4.5rem, 20vw, 7rem);
     }
 
     .bracket {
