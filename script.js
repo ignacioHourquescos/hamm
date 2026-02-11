@@ -35,11 +35,11 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 window.addEventListener('scroll', () => {
     const navbar = document.querySelector('.navbar');
     if (window.scrollY > 50) {
-        navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+        navbar.style.background = '#ffffff';
         navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
     } else {
-        navbar.style.background = 'rgba(255, 255, 255, 0.95)';
-        navbar.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+        navbar.style.background = '#ffffff';
+        navbar.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.05)';
     }
 });
 
@@ -98,4 +98,40 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+// Service card "+ MÁS" toggle
+document.querySelectorAll('.service-more-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const details = btn.previousElementSibling; // .service-card-details
+        const isOpen = details.classList.contains('open');
+
+        details.classList.toggle('open');
+        btn.classList.toggle('active');
+        btn.textContent = isOpen ? '+ MÁS' : '− MENOS';
+        btn.setAttribute('aria-expanded', !isOpen);
+    });
+});
+
+// Collage photos random activation
+(function() {
+    const collageItems = document.querySelectorAll('.collage-item');
+
+    function activateRandom(item) {
+        const delay = Math.random() * 2000 + 1000; // random delay before activating (1-3s)
+        const duration = Math.random() * 2000 + 2000; // active for 2-4s
+
+        setTimeout(() => {
+            item.classList.add('active');
+            setTimeout(() => {
+                item.classList.remove('active');
+                activateRandom(item); // loop
+            }, duration);
+        }, delay);
+    }
+
+    collageItems.forEach(item => {
+        activateRandom(item);
+    });
+})();
+
 

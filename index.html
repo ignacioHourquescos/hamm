@@ -6,7 +6,7 @@
     <title>HAMM - Agencia Comercial 360°</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Inter:wght@300;400;500;600;700&family=Vazirmatn:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -19,8 +19,8 @@
             </div>
             <ul class="nav-menu" id="navMenu">
                 <li><a href="#home">Home</a></li>
-                <li><a href="#servicios">Servicios</a></li>
                 <li><a href="#quienes-somos">Quiénes Somos</a></li>
+                <li><a href="#que-hacemos">Servicios</a></li>
                 <li><a href="#marcas">Marcas</a></li>
                 <li><a href="#contacto">Contacto</a></li>
             </ul>
@@ -34,10 +34,53 @@
 
     <!-- Hero Section -->
     <section id="home" class="hero">
-        <div class="hero-bg-pattern"></div>
+        <!-- Photo Collage Background -->
+        <div class="hero-collage">
+            <div class="collage-grid">
+                <div class="collage-item item-1">
+                    <img src="imagenes/header_caballero.jpg" alt="">
+                </div>
+                <div class="collage-item item-2">
+                    <img src="imagenes/header_samsung.jpeg" alt="">
+                </div>
+                <div class="collage-item item-3">
+                    <img src="imagenes/header_trotilla.jpg" alt="">
+                </div>
+                <div class="collage-item item-4">
+                    <img src="imagenes/header_gancia.jpeg" alt="">
+                </div>
+                <div class="collage-item item-5">
+                    <img src="imagenes/header_puppis.jpeg" alt="">
+                </div>
+                <div class="collage-item item-6">
+                    <img src="imagenes/header_luiscorrea.jpg" alt="">
+                </div>
+                <div class="collage-item item-7">
+                    <img src="imagenes/header_cynar.jpeg" alt="">
+                </div>
+                <div class="collage-item item-8">
+                    <img src="imagenes/header_youngblood.jpg" alt="">
+                </div>
+                <div class="collage-item item-9">
+                    <img src="imagenes/header_aperol.jpeg" alt="">
+                </div>
+                <div class="collage-item item-10">
+                    <img src="imagenes/header_caballero2.jpg" alt="">
+                </div>
+                <div class="collage-item item-11">
+                    <img src="imagenes/header_youngblood2.jpg" alt="">
+                </div>
+                <div class="collage-item item-12">
+                    <img src="imagenes/hedaer_luiscorreo.jpg" alt="">
+                </div>
+            </div>
+            <!-- Overlay -->
+            <div class="hero-collage-overlay"></div>
+        </div>
+
         <div class="hero-content">
             <h1 class="hero-title">HAMM</h1>
-            <p class="hero-subtitle">Estrategia y ejecución comercial en puntos de venta</p>
+            <p class="hero-subtitle">Agencia de representación y consultoría comercial</p>
    
             <p class="hero-services"></p>
             <a href="#contacto" class="hero-cta-button">Agendar una reunión</a>
@@ -50,6 +93,28 @@
             <div class="bracket bracket-bottom-right"></div>
         </div>
     </section>
+
+        <!-- Quiénes Somos Section -->
+    <section id="quienes-somos" class="quienes-somos">
+        <div class="container">
+            <div class="quienes-somos-header">
+                <span class="quienes-somos-label">NOSOTROS</span>
+                <h2 class="section-title">Quiénes Somos</h2>
+            </div>
+            <div class="about-content">
+                <p class="lead">
+                    En HAMM creemos en las <span>alianzas que transforman</span> negocios.
+                </p>
+                <p>
+                    No solo vendemos: analizamos, diseñamos, ejecutamos y acompañamos cada proyecto como si fuera propio. Con una visión enfocada a resultados y apoyados a través de herramientas de IA. En HAMM abordamos la estrategia y la representación de tu marca de manera global y efectiva.
+                </p>
+                <p>
+                    Nuestra experiencia en Trade, nuestra red comercial y nuestra capacidad de producción POP nos permiten ofrecer soluciones integrales. Somos un socio estratégico para marcas que buscan crecer con presencia, planificación y resultados cuantificables..
+                </p>
+        
+            </div>
+        </div>
+    </section>image.png
 
     <!-- Qué Hacemos Section -->
     <section id="que-hacemos" class="que-hacemos">
@@ -65,6 +130,15 @@
                     </div>
                     <h3>Representación Comercial</h3>
                     <p>Abrimos puertas, desarrollamos cartera y gestionamos clientes con un enfoque profesional, humano y estratégico.</p>
+                    <div class="service-card-details">
+                        <ul>
+                            <li>Desarrollo y gestión de cartera</li>
+                            <li>Prospección y apertura de nuevos canales</li>
+                            <li>Negociación y seguimiento de cuentas</li>
+                            <li>Reportes y análisis de ventas</li>
+                        </ul>
+                    </div>
+                    <button class="service-more-btn" aria-expanded="false">+ MÁS</button>
                 </div>
                 <div class="service-card">
                     <div class="service-icon-wrapper">
@@ -72,6 +146,15 @@
                     </div>
                     <h3>Trade Marketing</h3>
                     <p>Maximizamos la visibilidad y ejecución en punto de venta a través de activaciones, relevamientos y exhibiciones efectivas.</p>
+                    <div class="service-card-details">
+                        <ul>
+                            <li>Relevamiento y ejecución en PDV</li>
+                            <li>Exhibiciones, layouts y planogramas</li>
+                            <li>Activaciones y degustaciones</li>
+                            <li>Auditoría de materiales POP</li>
+                        </ul>
+                    </div>
+                    <button class="service-more-btn" aria-expanded="false">+ MÁS</button>
                 </div>
                 <div class="service-card">
                     <div class="service-icon-wrapper">
@@ -79,6 +162,15 @@
                     </div>
                     <h3>Producción POP</h3>
                     <p>Diseñamos y fabricamos materiales que venden: exhibidores, carteles, stoppers, gráfica, colgantes, mini stands, mobiliario etc.</p>
+                    <div class="service-card-details">
+                        <ul>
+                            <li>Diseño creativo y prototipado</li>
+                            <li>Fabricación de exhibidores livianos y durables</li>
+                            <li>Cartelería, señalización y elementos promocionales</li>
+                            <li>Entrega en punto o logística al distribuidor</li>
+                        </ul>
+                    </div>
+                    <button class="service-more-btn" aria-expanded="false">+ MÁS</button>
                 </div>
                 <div class="service-card">
                     <div class="service-icon-wrapper">
@@ -86,118 +178,86 @@
                     </div>
                     <h3>Consumo masivo</h3>
                     <p>Representamos y comercializamos productos de consumo masivo orientando la marca y el producto al canal óptimo y adecuado.</p>
+                    <div class="service-card-details">
+                        <ul>
+                            <li>Venta consultiva a restaurantes, vinotecas y caterings</li>
+                            <li>Capacitación y storytelling del vino</li>
+                            <li>Desarrollo comercial en canal HORECA y B2B</li>
+                        </ul>
+                    </div>
+                    <button class="service-more-btn" aria-expanded="false">+ MÁS</button>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Quiénes Somos Section -->
-    <section id="quienes-somos" class="quienes-somos">
-        <div class="container">
-            <div class="quienes-somos-header">
-                <span class="quienes-somos-label">NOSOTROS</span>
-                <h2 class="section-title">Quiénes Somos</h2>
-            </div>
-            <div class="about-content">
-                <p class="lead">
-                    En HAMM creemos en las <span>alianzas que transforman</span> negocios.
-                </p>
-                <p>
-                    No solo vendemos: analizamos, diseñamos, ejecutamos y acompañamos cada proyecto como si fuera propio. Con una visión enfocada a resultados y apoyados a través de herramientas de IA. En HAMM abordamos la estrategia y la representación de tu marca de manera global y efectiva.
-                </p>
-                <p>
-                    Nuestra experiencia en Trade, nuestra red comercial y nuestra capacidad de producción POP nos permiten ofrecer soluciones integrales. Somos un socio estratégico para marcas que buscan crecer con presencia, planificación y resultados medibles.
-                </p>
-                <div class="about-highlight">
-                    <p>
-                        <strong>HAMM</strong> es Hernán Andrés Mendizabal Moller, una visión comercial construida sobre profesionalismo, cercanía y compromiso. Fundada por <span class="highlight-name">Andrés Moller</span> y <span class="highlight-name">Hernán Mendizabal</span> con amplia trayectoria en consumo masivo, trade marketing.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Servicios Detallados Section -->
-    <section id="servicios" class="servicios-detallados">
-        <div class="container">
-            <h2 class="section-title">Servicios</h2>
-            <div class="servicios-list">
-                <div class="servicio-item">
-                    <h3>Representación Comercial</h3>
-                    <ul>
-                        <li>Desarrollo y gestión de cartera</li>
-                        <li>Prospección y apertura de nuevos canales</li>
-                        <li>Negociación y seguimiento de cuentas</li>
-                        <li>Reportes y análisis de ventas</li>
-                    </ul>
-                </div>
-                <div class="servicio-item">
-                    <h3>Trade Marketing</h3>
-                    <ul>
-                        <li>Relevamiento y ejecución en PDV</li>
-                        <li>Exhibiciones, layouts y planogramas</li>
-                        <li>Activaciones y degustaciones</li>
-                        <li>Auditoría de materiales POP</li>
-                    </ul>
-                </div>
-                <div class="servicio-item">
-                    <h3>Producción POP</h3>
-                    <ul>
-                        <li>Diseño creativo y prototipado</li>
-                        <li>Fabricación de exhibidores livianos y durables</li>
-                        <li>Cartelería, señalización y elementos promocionales</li>
-                        <li>Entrega en punto o logística al distribuidor</li>
-                    </ul>
-                </div>
-                <div class="servicio-item">
-                    <h3>Comercialización de bebidas</h3>
-                    <ul>
-                        <li>Venta consultiva a restaurantes, vinotecas y caterings</li>
-                        <li>Capacitación y storytelling del vino</li>
-                        <li>Desarrollo comercial en canal HORECA y B2B</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- Marcas Section -->
     <section id="marcas" class="marcas">
         <div class="container">
             <div class="quienes-somos-header">
-                <span class="quienes-somos-label">PARTNERS</span>
+                <span class="quienes-somos-label">MARCAS</span>
                 <h2 class="section-title">Marcas</h2>
             </div>
             <p class="marcas-intro">
                 Representamos a marcas que buscan expansión sostenida, visibilidad y una ejecución impecable.
             </p>
             <div class="marcas-grid">
-                <div class="marca-card">
-                    <div class="marca-icon">
-                        <i class="fas fa-wine-bottle"></i>
+                <a href="https://www.instagram.com/fincadelaorden/?hl=en" target="_blank" class="marca-card-link">
+                    <div class="marca-card">
+                        <div class="marca-logo">
+                            <img src="logos/caballero_de_la_orden.png" alt="Caballero de la orden">
+                        </div>
                     </div>
-                    <h3>Bodega Luis Segundo Correas</h3>
-                    <p>Una bodega boutique mendocina con más de cien años de tradición y vinos de alta calidad</p>
-                </div>
-                <div class="marca-card">
-                    <div class="marca-icon">
-                        <i class="fas fa-star"></i>
+                </a>
+                <a href="https://www.bodegacorreas.com.ar/" target="_blank" class="marca-card-link">
+                    <div class="marca-card">
+                        <div class="marca-logo">
+                            <img src="logos/segundo_correas.png" alt="Segundo Correas">
+                        </div>
                     </div>
-                    <h3>Ueno</h3>
-                </div>
-                <div class="marca-card">
-                    <div class="marca-icon">
-                        <i class="fas fa-building"></i>
+                </a>
+                <a href="https://quieroueno.com/" target="_blank" class="marca-card-link">
+                    <div class="marca-card">
+                        <div class="marca-logo">
+                            <img src="logos/ueno.png" alt="Ueno">
+                        </div>
                     </div>
-                    <h3>M Estruturas</h3>
-                </div>
-                <div class="marca-card">
-                    <div class="marca-icon">
-                        <i class="fas fa-wrench"></i>
+                </a>
+                <a href="https://www.instagram.com/youngbloodmix/" target="_blank" class="marca-card-link">
+                    <div class="marca-card">
+                        <div class="marca-logo">
+                            <img src="logos/young_blood.png" alt="Young Bloody">
+                        </div>
                     </div>
-                    <h3>Young Bloody</h3>
-                    <p class="tbd">TBD</p>
-                </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Partners Section -->
+    <section id="partners" class="partners">
+        <div class="container">
+            <div class="quienes-somos-header">
+                <span class="quienes-somos-label">PARTNERS</span>
+                <h2 class="section-title">Partners</h2>
+            </div>
+            <div class="marcas-grid">
+                <a href="https://emeweb.com.ar/retail" target="_blank" class="marca-card-link">
+                    <div class="marca-card">
+                        <div class="marca-logo">
+                            <img src="logos/eme_retail.png" alt="Eme Retail">
+                        </div>
+                    </div>
+                </a>
+                <a href="https://tradedisplay.com.ar/#!/-home/" target="_blank" class="marca-card-link">
+                    <div class="marca-card">
+                        <div class="marca-logo">
+                            <img src="logos/trade_display.png" alt="Trade Display">
+                        </div>
+                    </div>
+                </a>
             </div>
         </div>
     </section>
@@ -213,9 +273,9 @@
                 <div class="contact-card">
                     <h3>Andrés Moller</h3>
                     <div class="contact-info">
-                        <a href="tel:+5491154713868">
+                        <a href="https://wa.me/5491154713868" target="_blank">
                             <div class="contact-icon">
-                                <i class="fas fa-phone"></i>
+                                <i class="fab fa-whatsapp"></i>
                             </div>
                             <span>+54 911 5471 3868</span>
                         </a>
@@ -230,9 +290,9 @@
                 <div class="contact-card">
                     <h3>Hernán Mendizabal</h3>
                     <div class="contact-info">
-                        <a href="tel:+5491158487984">
+                        <a href="https://wa.me/5491158487984" target="_blank">
                             <div class="contact-icon">
-                                <i class="fas fa-phone"></i>
+                                <i class="fab fa-whatsapp"></i>
                             </div>
                             <span>+54 911 5848 7984</span>
                         </a>
