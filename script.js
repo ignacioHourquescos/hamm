@@ -112,25 +112,84 @@ document.querySelectorAll('.service-more-btn').forEach(btn => {
     });
 });
 
-// Collage photos random activation
+// Collage: dynamic grid spans from image aspect ratio + random highlight
 (function() {
-    const collageItems = document.querySelectorAll('.collage-item');
+    const grid = document.querySelector('.collage-grid');
+    if (!grid) return;
+
+    const items = [...grid.querySelectorAll('.collage-item')];
+    const images = items.map(item => item.querySelector('img'));
+
+    function bestSpans(aspectRatio, mobile) {
+        const colMin = 2;
+        const colMax = mobile ? 3 : 5;
+        const rowMin = 2;
+        const rowMax = mobile ? 3 : 4;
+        let best = { col: 3, row: 3, diff: Infinity };
+
+        for (let col = colMin; col <= colMax; col++) {
+            for (let row = rowMin; row <= rowMax; row++) {
+                const cellRatio = col / row;
+                const diff = Math.abs(Math.log(cellRatio) - Math.log(aspectRatio));
+                if (diff < best.diff) {
+                    best = { col, row, diff };
+                }
+            }
+        }
+        return best;
+    }
+
+    function layoutCollage() {
+        const mobile = window.innerWidth <= 768;
+        const cols = mobile ? 6 : 12;
+        grid.style.setProperty('--collage-cols', cols);
+        grid.style.setProperty('--collage-row-unit', `calc(100% / ${mobile ? 8 : 6})`);
+
+        items.forEach((item, i) => {
+            const img = images[i];
+            if (!img?.naturalWidth) return;
+
+            const { col, row } = bestSpans(img.naturalWidth / img.naturalHeight, mobile);
+            item.style.gridColumn = `span ${col}`;
+            item.style.gridRow = `span ${row}`;
+        });
+    }
+
+    function whenImagesReady() {
+        return Promise.all(
+            images.map(img => {
+                if (!img) return Promise.resolve();
+                if (img.complete && img.naturalWidth) return Promise.resolve();
+                return new Promise(resolve => {
+                    img.addEventListener('load', resolve, { once: true });
+                    img.addEventListener('error', resolve, { once: true });
+                });
+            })
+        );
+    }
 
     function activateRandom(item) {
-        const delay = Math.random() * 2000 + 1000; // random delay before activating (1-3s)
-        const duration = Math.random() * 2000 + 2000; // active for 2-4s
+        const delay = Math.random() * 2000 + 1000;
+        const duration = Math.random() * 2000 + 2000;
 
         setTimeout(() => {
             item.classList.add('active');
             setTimeout(() => {
                 item.classList.remove('active');
-                activateRandom(item); // loop
+                activateRandom(item);
             }, duration);
         }, delay);
     }
 
-    collageItems.forEach(item => {
-        activateRandom(item);
+    let resizeTimer;
+    whenImagesReady().then(() => {
+        layoutCollage();
+        items.forEach(activateRandom);
+    });
+
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(layoutCollage, 150);
     });
 })();
 

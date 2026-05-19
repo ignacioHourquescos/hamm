@@ -83,9 +83,9 @@ Ponemos logos de : Bodega Luis Segundo Correas, (una bodega boutique mendocina c
 
 Agregar Icono de WHATSAPP
 
-Contacto Andres Moller +54 911 5471 3868 amoller@hamm.com.ar
+Contacto Andres Moller +54 911 5471 3868 amoller@hamm.ar
 
-Hernán Mendizabal +54 911 5848 7984 h.mendizabal@hamm.com.ar
+Hernán Mendizabal +54 911 5848 7984 h.mendizabal@hamm.ar
 
 quiero armar esta pagina web con la estetica de https://methodo.ar/
 
@@ -696,13 +696,13 @@ const contactos = [
         name: "Andrés Moller",
         phone: "+54 911 5471 3868",
         phoneClean: "5491154713868",
-        email: "amoller@hamm.com.ar"
+        email: "amoller@hamm.ar"
     },
     {
         name: "Hernán Mendizabal",
         phone: "+54 911 5848 7984",
         phoneClean: "5491158487984",
-        email: "h.mendizabal@hamm.com.ar"
+        email: "h.mendizabal@hamm.ar"
     }
 ];
 
