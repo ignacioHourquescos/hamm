@@ -37,11 +37,23 @@ body {
     position: fixed;
     top: 0;
     width: 100%;
-    background: #ffffff;
+    background: rgba(0, 0, 0, 0.75);
     backdrop-filter: blur(10px);
-    box-shadow: 0 2px 20px rgba(34, 34, 59, 0.05);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
     z-index: 1000;
-    transition: var(--transition);
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                background 0.3s ease,
+                box-shadow 0.3s ease;
+}
+
+.navbar.is-visible {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .navbar .container {
@@ -54,7 +66,7 @@ body {
 .nav-brand h1 {
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--space-indigo);
+    color: var(--white);
     letter-spacing: 2px;
     font-family: 'Vazirmatn', sans-serif;
 }
@@ -67,7 +79,7 @@ body {
 
 .nav-menu a {
     text-decoration: none;
-    color: var(--space-indigo);
+    color: var(--white);
     font-weight: 500;
     font-size: 0.9rem;
     transition: var(--transition);
@@ -99,7 +111,7 @@ body {
 .nav-toggle span {
     width: 25px;
     height: 3px;
-    background: var(--space-indigo);
+    background: var(--white);
     transition: var(--transition);
 }
 
@@ -112,53 +124,111 @@ body {
     align-items: center;
     justify-content: center;
     text-align: center;
-    background: var(--space-indigo);
-    padding-top: 80px;
+    background: #000000;
     overflow: hidden;
 }
 
-/* Photo Collage Background */
+/* Hero image grid background */
 .hero-collage {
     position: absolute;
     inset: 0;
     z-index: 0;
+    overflow: hidden;
+    background: #000000;
 }
 
-.collage-grid {
-    --collage-cols: 12;
-    --collage-row-unit: calc(100% / 6);
-    display: grid;
-    grid-template-columns: repeat(var(--collage-cols), 1fr);
-    grid-auto-rows: var(--collage-row-unit);
-    grid-auto-flow: dense;
-    gap: 6px;
+.hero-grid {
+    --grid-gap: 8px;
+    --grid-rows: 4;
+    --cell-size: 120px;
+    --ease-move: cubic-bezier(0.22, 1, 0.36, 1);
     width: 100%;
     height: 100%;
+    display: flex;
+    gap: var(--grid-gap);
+    background: #000000;
+    box-sizing: border-box;
+    padding: 0;
 }
 
-.collage-item {
+.grid-column {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 100%;
     overflow: hidden;
     position: relative;
-    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
 }
 
-.collage-item img {
+.grid-track-v {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--grid-gap);
+    will-change: transform;
+    width: 100%;
+}
+
+.grid-cell {
+    flex-shrink: 0;
+    width: 100%;
+    height: var(--cell-size, auto);
+    max-height: var(--cell-size, calc((100% - (var(--grid-rows) - 1) * var(--grid-gap)) / var(--grid-rows)));
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: 2px;
+    position: relative;
+    isolation: isolate;
+}
+
+.grid-track-h {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    width: 200%;
+    height: 100%;
+    will-change: transform;
+    gap: 0;
+}
+
+.grid-cell-inner {
+    flex-shrink: 0;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.grid-cell-inner img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: center;
     display: block;
-    filter: saturate(0.1) brightness(0.7);
-    transition: filter 0.6s ease;
+    filter: grayscale(1) brightness(0.38);
+    transition: filter 0.595s var(--ease-move, cubic-bezier(0.22, 1, 0.36, 1));
 }
 
-.collage-item.active img {
-    filter: saturate(1) brightness(1);
+.grid-cell-inner::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.78);
+    pointer-events: none;
+    z-index: 1;
+    transition: opacity 0.595s var(--ease-move, cubic-bezier(0.22, 1, 0.36, 1));
 }
 
-/* Overlay on top of collage */
-.hero-collage-overlay {
-    display: none;
+.grid-column.is-active .grid-cell-inner img,
+.grid-cell.is-lit .grid-cell-inner img {
+    filter: grayscale(0) brightness(1) saturate(1.05);
+}
+
+.grid-column.is-active .grid-cell-inner::after,
+.grid-cell.is-lit .grid-cell-inner::after {
+    opacity: 0;
 }
 
 .hero-content {
@@ -168,22 +238,27 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.80);
-    padding: 3rem 3.5rem;
-    border-radius: 50%;
-    aspect-ratio: 1;
-    max-width: 500px;
-    max-height: 500px;
+    padding: 0 2rem;
+    text-align: center;
+    pointer-events: none;
 }
 
 .hero-title {
-    font-size: clamp(4rem, 8vw, 7rem);
-    font-weight: 300;
+    font-size: clamp(6.5rem, 18vw, 14rem);
+    font-weight: 800;
     color: var(--white);
     margin: 0;
-    line-height: 0.9;
+    line-height: 0.88;
     font-family: 'Vazirmatn', sans-serif;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.03em;
+    text-shadow:
+        0 0 32px rgba(0, 0, 0, 1),
+        0 0 64px rgba(0, 0, 0, 0.95),
+        0 0 120px rgba(0, 0, 0, 0.85),
+        0 8px 28px rgba(0, 0, 0, 0.9);
+    filter: drop-shadow(0 0 24px rgba(0, 0, 0, 1))
+            drop-shadow(0 0 48px rgba(0, 0, 0, 0.95))
+            drop-shadow(0 12px 36px rgba(0, 0, 0, 0.9));
     animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -280,9 +355,9 @@ body {
 
 .bracket {
     position: absolute;
-    width: 4rem;
-    height: 4rem;
-    border: 2px solid rgba(255, 255, 255, 0.25);
+    width: 5rem;
+    height: 5rem;
+    border: 3px solid rgba(255, 255, 255, 0.25);
 }
 
 .bracket-top-left {
@@ -870,11 +945,22 @@ section {
     font-size: 1.5rem;
     box-shadow: 0 4px 20px rgba(37, 211, 102, 0.3);
     z-index: 999;
-    transition: var(--transition);
     text-decoration: none;
+    transform: translateY(120%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.3s ease;
 }
 
-.whatsapp-float:hover {
+.whatsapp-float.is-visible {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.whatsapp-float.is-visible:hover {
     transform: scale(1.1);
     box-shadow: 0 6px 30px rgba(37, 211, 102, 0.5);
 }
@@ -920,7 +1006,7 @@ section {
         left: -100%;
         top: 70px;
         flex-direction: column;
-        background: var(--honeydew);
+        background: rgba(0, 0, 0, 0.9);
         width: 100%;
         text-align: center;
         transition: var(--transition);
@@ -948,19 +1034,67 @@ section {
         transform: rotate(-45deg) translate(7px, -6px);
     }
 
-    .collage-grid {
-        --collage-cols: 6;
-        --collage-row-unit: calc(100% / 8);
-        gap: 4px;
+    .hero {
+        display: block;
+        min-height: 100dvh;
+        min-height: 100svh;
+    }
+
+    .hero-grid {
+        --grid-gap: 5px;
+        height: 100%;
+        align-items: stretch;
+    }
+
+    .grid-column:nth-child(n+4) {
+        display: none;
+    }
+
+    .grid-column {
+        height: 100%;
+    }
+
+    .grid-track-v {
+        height: auto;
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: var(--grid-gap);
+    }
+
+    .grid-cell {
+        flex: 0 0 var(--cell-size);
+        width: 100%;
+        height: var(--cell-size);
+        min-height: var(--cell-size);
+        max-height: none;
+        aspect-ratio: unset;
+    }
+
+    .hero-content {
+        position: absolute;
+        inset: 0;
+        padding: 0 1.25rem;
+        justify-content: center;
     }
 
     .hero-title {
-        font-size: clamp(3.5rem, 12vw, 5.5rem);
+        font-size: clamp(4rem, 26vw, 7rem);
+        line-height: 0.9;
+    }
+
+    .hero-subtitle {
+        font-size: 0.62rem;
+        letter-spacing: 0.14em;
+        max-width: 16rem;
+        line-height: 1.45;
+        margin-top: 0.75rem;
     }
 
     .bracket {
-        width: 2.5rem;
-        height: 2.5rem;
+        width: 2.75rem;
+        height: 2.75rem;
+        border-width: 3px;
     }
 
     .bracket-top-left,
@@ -1040,12 +1174,13 @@ section {
     }
 
     .hero-title {
-        font-size: clamp(3rem, 14vw, 4.5rem);
+        font-size: clamp(4.25rem, 24vw, 7.5rem);
     }
 
     .bracket {
-        width: 2rem;
-        height: 2rem;
+        width: 2.25rem;
+        height: 2.25rem;
+        border-width: 3px;
     }
 
     .service-card,
