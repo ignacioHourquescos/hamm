@@ -36,34 +36,56 @@ const navbar = document.querySelector('.navbar');
 const whatsappFloat = document.querySelector('.whatsapp-float');
 const contactSection = document.getElementById('contacto');
 const NAVBAR_SHOW_OFFSET = 50;
-const NAVBAR_HEIGHT = 80;
+let atCharlemos = false;
 
-function updateScrollUiVisibility() {
+function getNavbarHeight() {
+    return navbar?.offsetHeight || 80;
+}
+
+function applyScrollUiVisibility() {
     const isVisible = window.scrollY > NAVBAR_SHOW_OFFSET;
 
-    let atCharlemos = false;
-
-    if (contactSection) {
-        atCharlemos = contactSection.getBoundingClientRect().top <= NAVBAR_HEIGHT;
-        navbar.classList.toggle('is-end', atCharlemos);
-        if (atCharlemos) {
-            navMenu.classList.remove('active');
-            navToggle.classList.remove('active');
-        }
-    }
-
+    navbar.classList.toggle('is-end', atCharlemos);
     navbar.classList.toggle('is-visible', isVisible);
     whatsappFloat?.classList.toggle('is-visible', isVisible && !atCharlemos);
     whatsappFloat?.classList.toggle('is-end', atCharlemos);
 
-    if (!isVisible) {
+    if (atCharlemos || !isVisible) {
         navMenu.classList.remove('active');
         navToggle.classList.remove('active');
     }
 }
 
-window.addEventListener('scroll', updateScrollUiVisibility);
-updateScrollUiVisibility();
+let charlemosObserver = null;
+
+function setupCharlemosObserver() {
+    if (!contactSection) return;
+
+    if (charlemosObserver) {
+        charlemosObserver.disconnect();
+    }
+
+    charlemosObserver = new IntersectionObserver(
+        ([entry]) => {
+            atCharlemos = entry.isIntersecting;
+            applyScrollUiVisibility();
+        },
+        {
+            threshold: 0,
+            rootMargin: `-${getNavbarHeight()}px 0px 0px 0px`
+        }
+    );
+    charlemosObserver.observe(contactSection);
+}
+
+setupCharlemosObserver();
+
+window.addEventListener('scroll', applyScrollUiVisibility);
+window.addEventListener('resize', () => {
+    setupCharlemosObserver();
+    applyScrollUiVisibility();
+});
+applyScrollUiVisibility();
 
 // Intersection Observer for fade-in animations
 const observerOptions = {
@@ -674,7 +696,7 @@ window.addEventListener('scroll', () => {
     });
 })();
 
-// Portfolio: encender imágenes al azar (como el hero)
+// Portfolio: ciclo automático; hover lo frena, al salir sigue
 (function initPortfolioHighlight() {
     const section = document.getElementById('nuestros-trabajos');
     const grid = document.querySelector('.portfolio-grid');
@@ -683,17 +705,20 @@ window.addEventListener('scroll', () => {
     const items = [...grid.querySelectorAll('.portfolio-item')];
     if (!items.length) return;
 
-    const ON_MS = 1000;
+    const ON_MS = 1500;
     const OFF_MS = 500;
+    const STOP_DEBOUNCE_MS = 350;
     let timer = null;
+    let stopDebounce = null;
     let lastIndex = null;
     let isVisible = false;
     let isRunning = false;
-    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let isPaused = false;
 
     function checkVisible() {
         const rect = section.getBoundingClientRect();
-        return rect.bottom > 0 && rect.top < window.innerHeight;
+        const vh = window.innerHeight || document.documentElement.clientHeight;
+        return rect.bottom > 0 && rect.top < vh;
     }
 
     function pickRandomIndex() {
@@ -709,10 +734,40 @@ window.addEventListener('scroll', () => {
         items.forEach(item => item.classList.remove('is-active'));
     }
 
+    function setActiveItem(item) {
+        clearActive();
+        if (item) item.classList.add('is-active');
+    }
+
+    function clearTimer() {
+        if (timer) {
+            clearTimeout(timer);
+            timer = null;
+        }
+    }
+
+    function pauseCycle() {
+        if (isPaused) return;
+        isPaused = true;
+        grid.classList.add('is-paused');
+        clearTimer();
+    }
+
+    function resumeCycle() {
+        if (!isPaused) return;
+        isPaused = false;
+        grid.classList.remove('is-paused');
+        clearActive();
+        if (isRunning && isVisible) {
+            timer = setTimeout(turnOnNext, 200);
+        }
+    }
+
     function turnOnNext() {
         timer = null;
-        if (!isRunning || !isVisible || motionQuery.matches) return;
+        if (isPaused || !isRunning || !isVisible) return;
 
+        clearActive();
         items[pickRandomIndex()].classList.add('is-active');
         timer = setTimeout(turnOffCurrent, ON_MS);
     }
@@ -721,7 +776,7 @@ window.addEventListener('scroll', () => {
         timer = null;
         clearActive();
 
-        if (!isRunning || !isVisible || motionQuery.matches) return;
+        if (isPaused || !isRunning || !isVisible) return;
 
         timer = setTimeout(turnOnNext, OFF_MS);
     }
@@ -730,37 +785,59 @@ window.addEventListener('scroll', () => {
         if (isRunning) return;
         isRunning = true;
         clearActive();
-        timer = setTimeout(turnOnNext, 300);
+        timer = setTimeout(turnOnNext, 200);
     }
 
     function stop() {
         isRunning = false;
-        if (timer) {
-            clearTimeout(timer);
-            timer = null;
-        }
+        isPaused = false;
+        grid.classList.remove('is-paused');
+        clearTimer();
         clearActive();
     }
 
-    const observer = new IntersectionObserver((entries) => {
-        isVisible = entries.some(entry => entry.isIntersecting);
-        if (isVisible) {
-            start();
-        } else {
-            stop();
+    function setVisible(visible) {
+        isVisible = visible;
+        if (visible) {
+            if (stopDebounce) {
+                clearTimeout(stopDebounce);
+                stopDebounce = null;
+            }
+            if (!isPaused) start();
+            return;
         }
-    }, { threshold: 0.05 });
+
+        if (stopDebounce) clearTimeout(stopDebounce);
+        stopDebounce = setTimeout(() => {
+            stopDebounce = null;
+            if (!isVisible) stop();
+        }, STOP_DEBOUNCE_MS);
+    }
+
+    grid.addEventListener('mouseenter', pauseCycle);
+
+    grid.addEventListener('mouseleave', (e) => {
+        const related = e.relatedTarget;
+        if (related && grid.contains(related)) return;
+        resumeCycle();
+    });
+
+    items.forEach(item => {
+        item.addEventListener('mouseenter', () => {
+            pauseCycle();
+            setActiveItem(item);
+        });
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+        const entry = entries[0];
+        if (!entry) return;
+        setVisible(entry.isIntersecting && entry.intersectionRatio > 0);
+    }, { threshold: 0 });
 
     observer.observe(section);
 
-    isVisible = checkVisible();
-    if (isVisible) start();
-
-    motionQuery.addEventListener('change', () => {
-        stop();
-        isVisible = checkVisible();
-        if (!motionQuery.matches && isVisible) start();
-    });
+    setVisible(checkVisible());
 })();
 
 // Service card "+ MÁS" toggle
