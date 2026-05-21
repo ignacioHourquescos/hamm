@@ -452,8 +452,8 @@ section {
 
 .services-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.5rem;
 }
 
 .service-card {
@@ -461,7 +461,8 @@ section {
     backdrop-filter: blur(10px);
     border: 1px solid rgba(var(--honeydew-rgb), 0.1);
     border-radius: 0;
-    padding: 2.5rem;
+    padding: 3rem;
+    min-height: 100%;
     transition: var(--transition);
     text-align: left;
 }
@@ -567,6 +568,91 @@ section {
     border-color: var(--accent-muted);
 }
 
+/* Métricas Section */
+.metricas {
+    background: var(--deep-indigo);
+    padding: 5rem 0;
+}
+
+.metricas-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    align-items: stretch;
+}
+
+.metrica-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    text-align: center;
+    padding: 2.5rem 2rem;
+    background: rgba(var(--honeydew-rgb), 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(var(--honeydew-rgb), 0.1);
+    transition: var(--transition);
+}
+
+.metrica-card:hover {
+    background: rgba(var(--honeydew-rgb), 0.08);
+    border-color: var(--accent-soft);
+    transform: translateY(-4px);
+}
+
+.metrica-numero {
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: clamp(2.75rem, 6vw, 4.5rem);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--honeydew);
+    letter-spacing: -0.02em;
+}
+
+.metrica-count {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: bottom;
+    min-width: 3.5ch;
+    text-align: center;
+}
+
+.metrica-count-value {
+    display: inline-block;
+    font-variant-numeric: tabular-nums;
+}
+
+.metrica-count.is-ticking .metrica-count-value {
+    animation: metrica-count-up 0.14s ease-out;
+}
+
+@keyframes metrica-count-up {
+    from {
+        transform: translateY(0.45em);
+        opacity: 0.25;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .metrica-count.is-ticking .metrica-count-value {
+        animation: none;
+    }
+}
+
+.metrica-label {
+    font-size: clamp(0.875rem, 1.4vw, 1rem);
+    font-weight: 500;
+    line-height: 1.45;
+    color: rgba(var(--honeydew-rgb), 0.65);
+    max-width: 15rem;
+    text-wrap: balance;
+}
+
 /* Quiénes Somos Section */
 .quienes-somos {
     background: var(--light-gray);
@@ -621,8 +707,8 @@ section {
 
 .quienes-somos .about-content p:not(.lead) {
     margin-bottom: 1.5rem;
-    font-size: clamp(1.25rem, 2.75vw, 1.625rem);
-    line-height: 1.75;
+    font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+    line-height: 1.65;
     color: rgba(var(--deep-indigo-rgb), 0.75);
 }
 
@@ -829,8 +915,8 @@ section {
 }
 
 .marcas-partners-viewport .partners .marcas-grid {
-    grid-template-columns: repeat(2, 1fr);
-    max-width: 32rem;
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 48rem;
     margin-left: auto;
     margin-right: auto;
     width: 100%;
@@ -938,8 +1024,8 @@ section {
 }
 
 .partners .marcas-grid {
-    grid-template-columns: repeat(2, 1fr);
-    max-width: 600px;
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 900px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -1032,7 +1118,7 @@ section {
     background: var(--deep-indigo);
     position: relative;
     overflow: hidden;
-    padding: 10rem 0;
+    padding: 10rem 0 7rem;
 }
 
 .contacto .container {
@@ -1040,13 +1126,120 @@ section {
     z-index: 1;
 }
 
-.contacto .quienes-somos-header {
-    text-align: center;
-    margin-bottom: 4rem;
+.charlemos-form {
+    max-width: 42rem;
+    margin: 0 auto;
 }
 
-.contacto .quienes-somos-label {
+.charlemos-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2.5rem;
+}
+
+.charlemos-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: left;
+}
+
+.charlemos-field--full {
+    grid-column: 1 / -1;
+}
+
+.charlemos-field label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(var(--honeydew-rgb), 0.72);
+}
+
+.charlemos-field input,
+.charlemos-field textarea {
+    width: 100%;
+    padding: 0.95rem 1rem;
+    background: rgba(var(--honeydew-rgb), 0.05);
+    border: 1px solid rgba(var(--honeydew-rgb), 0.12);
+    color: var(--honeydew);
+    font: inherit;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0;
+    transition: var(--transition);
+    resize: vertical;
+    min-height: 3.25rem;
+}
+
+.charlemos-field textarea {
+    min-height: 7.5rem;
+}
+
+.charlemos-field input::placeholder,
+.charlemos-field textarea::placeholder {
+    color: rgba(var(--honeydew-rgb), 0.38);
+}
+
+.charlemos-field input:focus,
+.charlemos-field textarea:focus {
+    outline: none;
+    border-color: var(--accent-soft);
+    background: rgba(var(--honeydew-rgb), 0.08);
+    box-shadow: 0 0 0 1px rgba(var(--accent-rgb), 0.18);
+}
+
+.charlemos-wrap {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+}
+
+.charlemos-phones {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem 2rem;
+    margin-bottom: 2rem;
+}
+
+.charlemos-phones a {
+    color: rgba(var(--honeydew-rgb), 0.65);
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    transition: var(--transition);
+}
+
+.charlemos-phones a:hover {
     color: var(--accent-muted);
+}
+
+.charlemos-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 2.75rem;
+    background: var(--accent-faint);
+    color: var(--accent-muted);
+    border: 1px solid var(--accent-soft);
+    font-size: 1.40625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    text-decoration: none;
+    transition: var(--transition);
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.charlemos-btn:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent-muted);
+    color: var(--accent);
+    transform: translateY(-2px);
 }
 
 .contact-grid {
@@ -1099,6 +1292,64 @@ section {
 
 .contact-info a:hover {
     color: var(--accent-muted);
+}
+
+.hamm-acronym {
+    margin-top: 0;
+    margin-bottom: 3rem;
+    text-align: center;
+    min-height: 3.5rem;
+}
+
+.hamm-acronym-text {
+    display: inline-block;
+    margin: 0;
+    font-size: clamp(2.25rem, 7vw, 4rem);
+    font-weight: 400;
+    letter-spacing: 0;
+    color: var(--honeydew);
+    font-family: 'Inter', sans-serif;
+    transition: color 0.3s ease;
+}
+
+.hamm-acronym-text .hamm-letter {
+    font-weight: 600;
+    color: var(--honeydew);
+    letter-spacing: 0.1em;
+}
+
+.hamm-acronym-text .hamm-typed {
+    display: inline-block;
+    font-weight: 200;
+    color: var(--accent-muted);
+    font-size: 0.62em;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    margin: 0 -0.04em;
+    vertical-align: baseline;
+}
+
+.hamm-acronym-text.is-typing {
+    color: var(--honeydew);
+}
+
+.hamm-acronym-text.is-typing::after {
+    content: '|';
+    margin-left: 0.08em;
+    color: var(--honeydew);
+    animation: hamm-cursor-blink 0.85s step-end infinite;
+}
+
+@keyframes hamm-cursor-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hamm-acronym-text.is-typing::after {
+        animation: none;
+        opacity: 0;
+    }
 }
 
 /* WhatsApp Float Button */
@@ -1313,31 +1564,59 @@ section {
         gap: 3rem;
     }
 
+    .metricas-grid {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+    }
+
+    .metricas {
+        padding: 3.5rem 0;
+    }
+
     .contacto {
-        min-height: 100dvh;
-        min-height: 100svh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        padding: 4.5rem 0 0;
+        min-height: auto;
+        display: block;
+        padding: 4.5rem 0 4rem;
         margin-bottom: 0;
     }
 
     .contacto .container {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+        flex: none;
+        display: block;
         width: 100%;
     }
 
-    .contacto .quienes-somos-header {
-        margin-bottom: 2.5rem;
+    .charlemos-fields {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .charlemos-wrap {
+        margin-top: 0;
     }
 
     .contact-card {
         width: 100%;
         max-width: 380px;
+    }
+
+    .hamm-acronym {
+        margin-bottom: 2rem;
+    }
+
+    .hamm-acronym-text {
+        font-size: clamp(1.85rem, 9vw, 2.75rem);
+    }
+
+    .hamm-acronym-text .hamm-letter {
+        letter-spacing: 0.07em;
+    }
+
+    .hamm-acronym-text .hamm-typed {
+        font-size: 0.6em;
+        letter-spacing: 0;
+        margin: 0 -0.03em;
     }
 
     .footer {

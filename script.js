@@ -103,7 +103,7 @@ const observer = new IntersectionObserver((entries) => {
 }, observerOptions);
 
 // Observe service cards and other elements
-document.querySelectorAll('.service-card, .servicio-item, .marca-card, .contact-card').forEach(el => {
+document.querySelectorAll('.service-card, .servicio-item, .marca-card, .contact-card, .metrica-card').forEach(el => {
     el.style.opacity = '0';
     el.style.transform = 'translateY(30px)';
     el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
@@ -838,6 +838,136 @@ window.addEventListener('scroll', () => {
     observer.observe(section);
 
     setVisible(checkVisible());
+})();
+
+// WhatsApp links (form + float button)
+(function initWhatsApp() {
+    const WHATSAPP_NUMBERS = ['5491154713868', '5491158487984'];
+
+    function getRandomWhatsAppNumber() {
+        return WHATSAPP_NUMBERS[Math.floor(Math.random() * WHATSAPP_NUMBERS.length)];
+    }
+
+    function buildWhatsAppUrl(message) {
+        const number = getRandomWhatsAppNumber();
+        const base = `https://wa.me/${number}`;
+        if (!message) return base;
+        return `${base}?text=${encodeURIComponent(message)}`;
+    }
+
+    function openWhatsApp(message) {
+        window.open(buildWhatsAppUrl(message), '_blank', 'noopener,noreferrer');
+    }
+
+    document.querySelectorAll('[data-random-wa]').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            openWhatsApp();
+        });
+    });
+
+    const charlemosForm = document.getElementById('charlemosForm');
+    if (charlemosForm) {
+        charlemosForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const nombre = document.getElementById('contactNombre')?.value.trim() || '';
+            const empresa = document.getElementById('contactEmpresa')?.value.trim() || '';
+            const telefono = document.getElementById('contactTelefono')?.value.trim() || '';
+            const email = document.getElementById('contactEmail')?.value.trim() || '';
+            const mensaje = document.getElementById('contactMensaje')?.value.trim() || '';
+
+            if (!nombre || !empresa || !telefono || !email || !mensaje) {
+                charlemosForm.reportValidity();
+                return;
+            }
+
+            const text = `Soy ${nombre} de ${empresa}, tel: ${telefono}, email: ${email}. Quiero ${mensaje}`;
+
+            openWhatsApp(text);
+        });
+    }
+})();
+
+// Métricas: count-up animation on scroll
+(function initMetricasCountUp() {
+    const section = document.getElementById('metricas');
+    if (!section) return;
+
+    const counters = [...section.querySelectorAll('.metrica-count')];
+    if (!counters.length) return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let hasAnimated = false;
+
+    counters.forEach(el => {
+        el.textContent = '0';
+    });
+
+    function setCountValue(el, value) {
+        const inner = el.querySelector('.metrica-count-value') || el;
+        inner.textContent = value;
+    }
+
+    function pulseCount(el) {
+        el.classList.remove('is-ticking');
+        void el.offsetWidth;
+        el.classList.add('is-ticking');
+    }
+
+    function animateCount(el, target, durationMs) {
+        const start = performance.now();
+        let previous = 0;
+
+        function tick(now) {
+            const progress = Math.min((now - start) / durationMs, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const current = Math.round(target * eased);
+
+            if (current !== previous) {
+                setCountValue(el, current);
+                pulseCount(el);
+                previous = current;
+            }
+
+            if (progress < 1) {
+                requestAnimationFrame(tick);
+            } else {
+                setCountValue(el, target);
+                el.classList.remove('is-ticking');
+            }
+        }
+
+        requestAnimationFrame(tick);
+    }
+
+    function runCountUp() {
+        if (hasAnimated) return;
+        hasAnimated = true;
+
+        counters.forEach((el, index) => {
+            const target = parseInt(el.dataset.target, 10) || 0;
+
+            if (prefersReducedMotion) {
+                setCountValue(el, target);
+                return;
+            }
+
+            animateCount(el, target, 2000 + index * 250);
+        });
+    }
+
+    const countObserver = new IntersectionObserver(
+        ([entry]) => {
+            if (entry.isIntersecting) {
+                runCountUp();
+                countObserver.disconnect();
+            }
+        },
+        { threshold: 0.2, rootMargin: '0px 0px -40px 0px' }
+    );
+
+    countObserver.observe(section);
 })();
 
 // Service card "+ MÁS" toggle
