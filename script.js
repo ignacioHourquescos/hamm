@@ -34,13 +34,27 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 // Navbar and WhatsApp visibility on scroll
 const navbar = document.querySelector('.navbar');
 const whatsappFloat = document.querySelector('.whatsapp-float');
+const contactSection = document.getElementById('contacto');
 const NAVBAR_SHOW_OFFSET = 50;
+const NAVBAR_HEIGHT = 80;
 
 function updateScrollUiVisibility() {
     const isVisible = window.scrollY > NAVBAR_SHOW_OFFSET;
 
+    let atCharlemos = false;
+
+    if (contactSection) {
+        atCharlemos = contactSection.getBoundingClientRect().top <= NAVBAR_HEIGHT;
+        navbar.classList.toggle('is-end', atCharlemos);
+        if (atCharlemos) {
+            navMenu.classList.remove('active');
+            navToggle.classList.remove('active');
+        }
+    }
+
     navbar.classList.toggle('is-visible', isVisible);
-    whatsappFloat?.classList.toggle('is-visible', isVisible);
+    whatsappFloat?.classList.toggle('is-visible', isVisible && !atCharlemos);
+    whatsappFloat?.classList.toggle('is-end', atCharlemos);
 
     if (!isVisible) {
         navMenu.classList.remove('active');
@@ -95,18 +109,6 @@ window.addEventListener('scroll', () => {
     });
 });
 
-// Add active class styles via JavaScript (or add to CSS)
-const style = document.createElement('style');
-style.textContent = `
-    .nav-menu a.active {
-        color: var(--accent-color);
-    }
-    .nav-menu a.active::after {
-        width: 100%;
-    }
-`;
-document.head.appendChild(style);
-
 // Hero image grid: fixed cells, column up / row sideways random moves
 (function initHeroGrid() {
     const gridEl = document.getElementById('heroGrid');
@@ -115,11 +117,20 @@ document.head.appendChild(style);
     const COLS = 8;
     const GRID_GAP = 8;
     const EASE_MOVE = 'cubic-bezier(0.22, 1, 0.36, 1)';
-    const ROWS = 4;
+    const ROWS_DESKTOP = 4;
+    const ROWS_MOBILE = 5;
+    const MOBILE_BREAKPOINT = 768;
     const FILLER_ROWS = 2;
     const ORDERED_HOLD = 3000;
     const MOVE_DURATION_MS = 1400;
     const PAUSE_BETWEEN_MOVES = 200;
+
+    let rows = getRowCount();
+    let sequenceTimer = null;
+
+    function getRowCount() {
+        return window.innerWidth <= MOBILE_BREAKPOINT ? ROWS_MOBILE : ROWS_DESKTOP;
+    }
 
     const IMAGE_POOL = [
         'new_header_caballero.png',
@@ -167,7 +178,7 @@ document.head.appendChild(style);
         let i = 0;
         for (let c = 0; c < COLS; c++) {
             matrix[c] = [];
-            for (let r = 0; r < ROWS; r++) {
+            for (let r = 0; r < rows; r++) {
                 matrix[c][r] = IMAGE_POOL[i % IMAGE_POOL.length];
                 i++;
             }
@@ -246,10 +257,10 @@ document.head.appendChild(style);
     }
 
     function pickUniqueRow(usedRows) {
-        const availableRows = [...Array(ROWS).keys()].filter(row => !usedRows.has(row));
+        const availableRows = [...Array(rows).keys()].filter(row => !usedRows.has(row));
         const dataRow = availableRows.length
             ? availableRows[Math.floor(Math.random() * availableRows.length)]
-            : Math.floor(Math.random() * ROWS);
+            : Math.floor(Math.random() * rows);
         usedRows.add(dataRow);
         return dataRow;
     }
@@ -281,6 +292,8 @@ document.head.appendChild(style);
     function buildGrid() {
         imageMatrix = buildImageMatrix();
         gridEl.innerHTML = '';
+        Object.keys(rowState).forEach(key => delete rowState[key]);
+        Object.keys(rowContent).forEach(key => delete rowContent[key]);
 
         for (let c = 0; c < COLS; c++) {
             const col = document.createElement('div');
@@ -290,10 +303,10 @@ document.head.appendChild(style);
             const vTrack = document.createElement('div');
             vTrack.className = 'grid-track-v';
 
-            for (let r = 0; r < ROWS; r++) {
+            for (let r = 0; r < rows; r++) {
                 vTrack.appendChild(createCell(imageMatrix[c][r], r, false));
             }
-            for (let r = 0; r < ROWS; r++) {
+            for (let r = 0; r < rows; r++) {
                 vTrack.appendChild(createCell(imageMatrix[c][r], r, true));
             }
             for (let f = 0; f < FILLER_ROWS; f++) {
@@ -305,7 +318,7 @@ document.head.appendChild(style);
             colState.set(vTrack, { y: 0 });
         }
 
-        for (let r = 0; r < ROWS; r++) {
+        for (let r = 0; r < rows; r++) {
             rowState[r] = { x: 0 };
         }
     }
@@ -317,11 +330,12 @@ document.head.appendChild(style);
         const colCount = getActiveColumns().length;
         const gridRect = gridEl.getBoundingClientRect();
         const fromWidth = (gridRect.width - (colCount - 1) * gap) / colCount;
-        const fromHeight = (gridRect.height - (ROWS - 1) * gap) / ROWS;
-        const isMobile = window.innerWidth <= 768;
+        const fromHeight = (gridRect.height - (rows - 1) * gap) / rows;
+        const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
         const size = Math.floor(isMobile ? fromHeight : Math.min(fromWidth, fromHeight));
 
         gridEl.style.setProperty('--cell-size', `${size}px`);
+        document.documentElement.style.setProperty('--hero-cell-size', `${size}px`);
 
         const track = gridEl.querySelector('.grid-track-v');
         const cells = track ? [...track.querySelectorAll('.grid-cell')] : [];
@@ -341,7 +355,7 @@ document.head.appendChild(style);
             cellH,
             gap,
             halfX: cellW,
-            halfY: ROWS * stepY
+            halfY: rows * stepY
         };
     }
 
@@ -401,7 +415,7 @@ document.head.appendChild(style);
         let bestRow = 0;
         let bestOverlap = -Infinity;
 
-        for (let vr = 0; vr < ROWS; vr++) {
+        for (let vr = 0; vr < rows; vr++) {
             const band = getVisualRowBand(vr);
             const overlap = getOverlap(cellTop, cellBottom, band.top, band.bottom);
             if (overlap > bestOverlap) {
@@ -441,7 +455,7 @@ document.head.appendChild(style);
     }
 
     function refreshAllRowTracks() {
-        for (let vr = 0; vr < ROWS; vr++) {
+        for (let vr = 0; vr < rows; vr++) {
             captureRowContent(vr);
             applyRowContent(vr);
         }
@@ -599,27 +613,57 @@ document.head.appendChild(style);
         }
 
         moveIndex++;
-        setTimeout(runSequence, PAUSE_BETWEEN_MOVES);
+        sequenceTimer = setTimeout(runSequence, PAUSE_BETWEEN_MOVES);
+    }
+
+    function stopSequence() {
+        if (sequenceTimer) {
+            clearTimeout(sequenceTimer);
+            sequenceTimer = null;
+        }
+    }
+
+    function startSequence() {
+        stopSequence();
+        sequenceTimer = setTimeout(runSequence, ORDERED_HOLD);
+    }
+
+    function initGridLayout() {
+        gridEl.style.setProperty('--grid-rows', rows);
+        measureSteps();
+
+        return whenImagesReady().then(() => {
+            measureSteps();
+            syncAllColumnPositions();
+            return new Promise(resolve => {
+                requestAnimationFrame(() => {
+                    measureSteps();
+                    syncAllColumnPositions();
+                    refreshAllRowTracks();
+                    resolve();
+                });
+            });
+        });
     }
 
     buildGrid();
-    measureSteps();
-
-    whenImagesReady().then(() => {
-        measureSteps();
-        syncAllColumnPositions();
-        requestAnimationFrame(() => {
-            measureSteps();
-            syncAllColumnPositions();
-            refreshAllRowTracks();
-        });
-        setTimeout(runSequence, ORDERED_HOLD);
-    });
+    initGridLayout().then(() => startSequence());
 
     let resizeTimer;
     window.addEventListener('resize', () => {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
+            const nextRows = getRowCount();
+            if (nextRows !== rows) {
+                stopSequence();
+                rows = nextRows;
+                moveIndex = 0;
+                lastVerticalColIndex = null;
+                buildGrid();
+                initGridLayout().then(() => startSequence());
+                return;
+            }
+
             measureSteps();
             requestAnimationFrame(() => {
                 measureSteps();
@@ -627,6 +671,95 @@ document.head.appendChild(style);
                 refreshAllRowTracks();
             });
         }, 150);
+    });
+})();
+
+// Portfolio: encender imágenes al azar (como el hero)
+(function initPortfolioHighlight() {
+    const section = document.getElementById('nuestros-trabajos');
+    const grid = document.querySelector('.portfolio-grid');
+    if (!section || !grid) return;
+
+    const items = [...grid.querySelectorAll('.portfolio-item')];
+    if (!items.length) return;
+
+    const ON_MS = 1000;
+    const OFF_MS = 500;
+    let timer = null;
+    let lastIndex = null;
+    let isVisible = false;
+    let isRunning = false;
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    function checkVisible() {
+        const rect = section.getBoundingClientRect();
+        return rect.bottom > 0 && rect.top < window.innerHeight;
+    }
+
+    function pickRandomIndex() {
+        if (items.length === 1) return 0;
+
+        const available = items.map((_, index) => index).filter(index => index !== lastIndex);
+        const index = available[Math.floor(Math.random() * available.length)];
+        lastIndex = index;
+        return index;
+    }
+
+    function clearActive() {
+        items.forEach(item => item.classList.remove('is-active'));
+    }
+
+    function turnOnNext() {
+        timer = null;
+        if (!isRunning || !isVisible || motionQuery.matches) return;
+
+        items[pickRandomIndex()].classList.add('is-active');
+        timer = setTimeout(turnOffCurrent, ON_MS);
+    }
+
+    function turnOffCurrent() {
+        timer = null;
+        clearActive();
+
+        if (!isRunning || !isVisible || motionQuery.matches) return;
+
+        timer = setTimeout(turnOnNext, OFF_MS);
+    }
+
+    function start() {
+        if (isRunning) return;
+        isRunning = true;
+        clearActive();
+        timer = setTimeout(turnOnNext, 300);
+    }
+
+    function stop() {
+        isRunning = false;
+        if (timer) {
+            clearTimeout(timer);
+            timer = null;
+        }
+        clearActive();
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+        isVisible = entries.some(entry => entry.isIntersecting);
+        if (isVisible) {
+            start();
+        } else {
+            stop();
+        }
+    }, { threshold: 0.05 });
+
+    observer.observe(section);
+
+    isVisible = checkVisible();
+    if (isVisible) start();
+
+    motionQuery.addEventListener('change', () => {
+        stop();
+        isVisible = checkVisible();
+        if (!motionQuery.matches && isVisible) start();
     });
 })();
 
