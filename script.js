@@ -45,12 +45,10 @@ function getNavbarHeight() {
 function applyScrollUiVisibility() {
     const isVisible = window.scrollY > NAVBAR_SHOW_OFFSET;
 
-    navbar.classList.toggle('is-end', atCharlemos);
     navbar.classList.toggle('is-visible', isVisible);
-    whatsappFloat?.classList.toggle('is-visible', isVisible && !atCharlemos);
-    whatsappFloat?.classList.toggle('is-end', atCharlemos);
+    whatsappFloat?.classList.toggle('is-visible', isVisible);
 
-    if (atCharlemos || !isVisible) {
+    if (!isVisible) {
         navMenu.classList.remove('active');
         navToggle.classList.remove('active');
     }
@@ -889,8 +887,8 @@ window.addEventListener('scroll', () => {
     }
 })();
 
-// Métricas: count-up animation on scroll
-(function initMetricasCountUp() {
+// Métricas: Odometer.js slot-machine counter on scroll
+(function initMetricasOdometer() {
     const section = document.getElementById('metricas');
     if (!section) return;
 
@@ -899,75 +897,59 @@ window.addEventListener('scroll', () => {
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let hasAnimated = false;
+    const instances = [];
 
-    counters.forEach(el => {
-        el.textContent = '0';
-    });
-
-    function setCountValue(el, value) {
-        const inner = el.querySelector('.metrica-count-value') || el;
-        inner.textContent = value;
-    }
-
-    function pulseCount(el) {
-        el.classList.remove('is-ticking');
-        void el.offsetWidth;
-        el.classList.add('is-ticking');
-    }
-
-    function animateCount(el, target, durationMs) {
-        const start = performance.now();
-        let previous = 0;
-
-        function tick(now) {
-            const progress = Math.min((now - start) / durationMs, 1);
-            const eased = 1 - Math.pow(1 - progress, 3);
-            const current = Math.round(target * eased);
-
-            if (current !== previous) {
-                setCountValue(el, current);
-                pulseCount(el);
-                previous = current;
-            }
-
-            if (progress < 1) {
-                requestAnimationFrame(tick);
-            } else {
-                setCountValue(el, target);
-                el.classList.remove('is-ticking');
-            }
+    function setupOdometers() {
+        if (typeof Odometer === 'undefined') {
+            window.setTimeout(setupOdometers, 50);
+            return;
         }
 
-        requestAnimationFrame(tick);
+        counters.forEach((counter, index) => {
+            const target = parseInt(counter.dataset.target, 10) || 0;
+            const duration = 2200 + index * 300;
+
+            const odometer = new Odometer({
+                el: counter,
+                value: 0,
+                duration,
+                format: 'd',
+                theme: 'minimal'
+            });
+
+            instances.push({ odometer, target });
+        });
+
+        observeAndTrigger();
     }
 
-    function runCountUp() {
+    function runAnimation() {
         if (hasAnimated) return;
         hasAnimated = true;
 
-        counters.forEach((el, index) => {
-            const target = parseInt(el.dataset.target, 10) || 0;
-
+        instances.forEach(({ odometer, target }, index) => {
             if (prefersReducedMotion) {
-                setCountValue(el, target);
+                odometer.update(target);
                 return;
             }
-
-            animateCount(el, target, 2000 + index * 250);
+            window.setTimeout(() => odometer.update(target), index * 220);
         });
     }
 
-    const countObserver = new IntersectionObserver(
-        ([entry]) => {
-            if (entry.isIntersecting) {
-                runCountUp();
-                countObserver.disconnect();
-            }
-        },
-        { threshold: 0.2, rootMargin: '0px 0px -40px 0px' }
-    );
+    function observeAndTrigger() {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    runAnimation();
+                    observer.disconnect();
+                }
+            },
+            { threshold: 0.2, rootMargin: '0px 0px -40px 0px' }
+        );
+        observer.observe(section);
+    }
 
-    countObserver.observe(section);
+    setupOdometers();
 })();
 
 // Service card "+ MÁS" toggle

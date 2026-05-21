@@ -570,15 +570,18 @@ section {
 
 /* Métricas Section */
 .metricas {
-    background: var(--deep-indigo);
-    padding: 5rem 0;
+    background: #000000;
+    padding: 5rem 0 2rem;
 }
 
 .metricas-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
+    grid-template-columns: repeat(3, auto);
+    justify-content: center;
+    gap: 2.5rem;
     align-items: stretch;
+    max-width: 720px;
+    margin: 0 auto;
 }
 
 .metrica-card {
@@ -586,62 +589,51 @@ section {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1rem;
+    gap: 0.5rem;
     text-align: center;
-    padding: 2.5rem 2rem;
-    background: rgba(var(--honeydew-rgb), 0.05);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(var(--honeydew-rgb), 0.1);
+    padding: 1.5rem 1rem;
+    background: transparent;
+    border: none;
     transition: var(--transition);
 }
 
 .metrica-card:hover {
-    background: rgba(var(--honeydew-rgb), 0.08);
-    border-color: var(--accent-soft);
     transform: translateY(-4px);
 }
 
 .metrica-numero {
     font-family: 'Vazirmatn', sans-serif;
-    font-size: clamp(2.75rem, 6vw, 4.5rem);
+    font-size: clamp(3.575rem, 7.8vw, 5.85rem);
     font-weight: 700;
     line-height: 1;
-    color: var(--honeydew);
+    color: var(--accent);
     letter-spacing: -0.02em;
 }
 
-.metrica-count {
-    display: inline-block;
-    overflow: hidden;
-    vertical-align: bottom;
-    min-width: 3.5ch;
-    text-align: center;
+.metrica-count.odometer {
+    font-family: inherit !important;
+    font-weight: inherit !important;
+    font-size: inherit !important;
+    line-height: 1 !important;
+    color: inherit !important;
+    vertical-align: baseline;
 }
 
-.metrica-count-value {
-    display: inline-block;
+.metrica-count.odometer .odometer-digit {
+    font-family: inherit !important;
     font-variant-numeric: tabular-nums;
 }
 
-.metrica-count.is-ticking .metrica-count-value {
-    animation: metrica-count-up 0.14s ease-out;
+.metrica-count.odometer .odometer-digit .odometer-digit-inner {
+    line-height: 1 !important;
 }
 
-@keyframes metrica-count-up {
-    from {
-        transform: translateY(0.45em);
-        opacity: 0.25;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
+.metrica-count.odometer .odometer-digit .odometer-ribbon-inner {
+    font-family: inherit !important;
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .metrica-count.is-ticking .metrica-count-value {
-        animation: none;
-    }
+.metrica-count.odometer .odometer-digit .odometer-value {
+    line-height: 1 !important;
 }
 
 .metrica-label {
@@ -756,7 +748,7 @@ section {
     background: #000000;
     position: relative;
     overflow: visible;
-    padding: 7rem 0;
+    padding: 2rem 0 7rem;
 }
 
 .nuestros-trabajos .quienes-somos-label {
@@ -824,8 +816,8 @@ section {
     display: block;
     filter: grayscale(1) brightness(0.38);
     transform: scale(1);
-    transition: filter 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-                transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: filter 1.1s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .portfolio-item-inner::after {
@@ -848,13 +840,24 @@ section {
     background: #000000;
 }
 
-.portfolio-item.is-active .portfolio-item-inner img {
+.portfolio-item.is-active .portfolio-item-inner img,
+.portfolio-item:hover .portfolio-item-inner img {
     filter: grayscale(0) brightness(1.2) saturate(1.25) contrast(1.05);
-    transform: scale(1.06);
+    transform: scale(1.2);
 }
 
-.portfolio-item.is-active .portfolio-item-inner::after {
+.portfolio-item.is-active .portfolio-item-inner::after,
+.portfolio-item:hover .portfolio-item-inner::after {
     opacity: 0;
+}
+
+.portfolio-item:hover {
+    z-index: 3;
+    background: #000000;
+}
+
+.portfolio-item:hover .portfolio-item-inner {
+    background: #000000;
 }
 
 .portfolio-grid.is-paused .portfolio-item {
@@ -1423,7 +1426,7 @@ section {
 
 /* Footer */
 .footer {
-    background: var(--deep-indigo);
+    background: #000000;
     color: rgba(var(--honeydew-rgb), 0.18);
     text-align: center;
     padding: 2rem 0;
@@ -1566,11 +1569,20 @@ section {
 
     .metricas-grid {
         grid-template-columns: 1fr;
-        gap: 2.5rem;
+        gap: 0.75rem;
     }
 
     .metricas {
-        padding: 3.5rem 0;
+        padding: 3rem 0 1.5rem;
+    }
+
+    .metrica-numero {
+        font-size: clamp(5rem, 14vw, 7rem);
+    }
+
+    .metrica-card {
+        gap: 0.25rem;
+        padding: 0.75rem 1rem;
     }
 
     .contacto {
@@ -1629,6 +1641,17 @@ section {
         grid-template-columns: repeat(2, 1fr);
     }
 
+    .marcas-partners-viewport {
+        height: auto;
+        min-height: 0;
+        padding: 0 0 2rem;
+        justify-content: flex-start;
+    }
+
+    .marcas-partners-viewport .marcas {
+        margin-bottom: 0.5rem;
+    }
+
     .marcas-partners-viewport .marcas .marcas-grid,
     .marcas-partners-viewport .partners .marcas-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -1641,10 +1664,12 @@ section {
         text-align: center;
         margin-left: auto;
         margin-right: auto;
+        margin-bottom: 1rem;
     }
 
     .marcas-partners-viewport .quienes-somos-header {
         text-align: center;
+        margin-bottom: 0.5rem;
     }
 
     .portfolio-showcase {
@@ -1681,6 +1706,14 @@ section {
 
     .que-hacemos {
         padding: 4rem 0;
+    }
+
+    .marcas-partners-viewport section.marcas {
+        padding: 2rem 0 0;
+    }
+
+    .marcas-partners-viewport section.partners {
+        padding: 2rem 0 0;
     }
 }
 
