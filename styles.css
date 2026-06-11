@@ -299,6 +299,8 @@ body {
 }
 
 .hero-title {
+    display: inline-flex;
+    align-items: baseline;
     font-size: clamp(6.5rem, 18vw, 14rem);
     font-weight: 800;
     color: var(--white);
@@ -313,6 +315,10 @@ body {
     animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.hero-letter {
+    display: inline-block;
+}
+
 .hero-subtitle {
     width: 100%;
     font-size: clamp(0.748rem, 1.746vw, 1.147rem);
@@ -324,6 +330,56 @@ body {
     margin-top: 0.45rem;
     text-wrap: balance;
     animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+.hero--intro .hero-collage {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.hero--ready .hero-collage {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear 0s;
+}
+
+.hero--intro .hero-title {
+    animation: none;
+}
+
+.hero--intro .hero-letter {
+    opacity: 0;
+    transform: translateY(0.45em) scale(0.92);
+    filter: blur(6px);
+    animation: heroLetterIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: calc(var(--i) * 0.45s);
+}
+
+.hero--intro .hero-subtitle {
+    opacity: 0;
+    transform: translateY(0.6em);
+    filter: blur(4px);
+    animation: none;
+}
+
+.hero--intro.hero--subtitle-in .hero-subtitle {
+    animation: heroSubtitleIn 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes heroLetterIn {
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+@keyframes heroSubtitleIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
 }
 
 .hero-headline {

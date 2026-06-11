@@ -132,7 +132,31 @@ window.addEventListener('scroll', () => {
 // Hero image grid: fixed cells, column up / row sideways random moves
 (function initHeroGrid() {
     const gridEl = document.getElementById('heroGrid');
+    const heroSection = document.getElementById('home');
     if (!gridEl) return;
+
+    const HERO_INTRO_KEY = 'hamm-hero-intro-seen';
+
+    function shouldPlayHeroIntro() {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            return false;
+        }
+        return !sessionStorage.getItem(HERO_INTRO_KEY);
+    }
+
+    const playHeroIntro = shouldPlayHeroIntro();
+
+    if (playHeroIntro) {
+        heroSection?.classList.add('hero--intro');
+    } else {
+        heroSection?.classList.add('hero--ready');
+    }
+    const HERO_LETTER_STAGGER_MS = 450;
+    const HERO_LETTER_COUNT = 4;
+    const HERO_LETTER_ANIM_MS = 550;
+    const HERO_SUBTITLE_DELAY_MS = (HERO_LETTER_COUNT - 1) * HERO_LETTER_STAGGER_MS + HERO_LETTER_ANIM_MS + 120;
+    const HERO_SUBTITLE_ANIM_MS = 650;
+    const HERO_GRID_REVEAL_MS = HERO_SUBTITLE_DELAY_MS + HERO_SUBTITLE_ANIM_MS + 180;
 
     const COLS = 8;
     const GRID_GAP = 8;
@@ -192,6 +216,38 @@ window.addEventListener('scroll', () => {
         }
 
         IMAGE_POOL = images;
+    }
+
+    function preloadHeroImages(files) {
+        return Promise.all(
+            files.map(file => new Promise(resolve => {
+                const img = new Image();
+                img.decoding = 'async';
+                img.onload = resolve;
+                img.onerror = resolve;
+                img.src = imgPath(file);
+            }))
+        );
+    }
+
+    function runHeroIntro() {
+        if (!heroSection || !playHeroIntro) {
+            return Promise.resolve();
+        }
+
+        const subtitleTimer = setTimeout(() => {
+            heroSection.classList.add('hero--subtitle-in');
+        }, HERO_SUBTITLE_DELAY_MS);
+
+        return new Promise(resolve => {
+            setTimeout(() => {
+                clearTimeout(subtitleTimer);
+                heroSection.classList.remove('hero--intro', 'hero--subtitle-in');
+                heroSection.classList.add('hero--ready');
+                sessionStorage.setItem(HERO_INTRO_KEY, '1');
+                resolve();
+            }, HERO_GRID_REVEAL_MS);
+        });
     }
 
     function shuffleArray(items) {
@@ -761,12 +817,22 @@ window.addEventListener('scroll', () => {
 
     loadImagePool()
         .then(() => {
+            const introPromise = runHeroIntro();
+            const preloadPromise = preloadHeroImages(IMAGE_POOL);
+
             buildGrid();
-            return initGridLayout();
+
+            return Promise.all([
+                introPromise,
+                preloadPromise,
+                initGridLayout()
+            ]);
         })
         .then(() => startSequence())
         .catch(error => {
             console.error('Hero grid:', error);
+            heroSection?.classList.remove('hero--intro', 'hero--subtitle-in');
+            heroSection?.classList.add('hero--ready');
         });
 
     let resizeTimer;
