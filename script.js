@@ -663,13 +663,26 @@ window.addEventListener('scroll', () => {
 
     function animateTransform(el, fromX, fromY, toX, toY, durationMs) {
         return new Promise(resolve => {
+            const finish = () => {
+                clearTimeout(fallback);
+                resolve();
+            };
+
+            if (Math.abs(fromX - toX) < 0.5 && Math.abs(fromY - toY) < 0.5) {
+                setTransform(el, toX, toY);
+                finish();
+                return;
+            }
+
+            const fallback = setTimeout(finish, durationMs + 120);
+
             setTransform(el, fromX, fromY);
             requestAnimationFrame(() => setTransform(el, toX, toY, true, durationMs));
 
             el.addEventListener('transitionend', function onEnd(e) {
-                if (e.propertyName !== 'transform') return;
+                if (e.propertyName !== 'transform' || e.target !== el) return;
                 el.removeEventListener('transitionend', onEnd);
-                resolve();
+                finish();
             });
         });
     }
@@ -777,20 +790,27 @@ window.addEventListener('scroll', () => {
     }
 
     async function runSequence() {
-        clearAllLit();
-        const activeCols = getActiveColumns();
-        const moveInCycle = moveIndex % 3;
+        try {
+            clearAllLit();
+            const activeCols = getActiveColumns();
+            if (!activeCols.length || !steps.stepY) return;
 
-        if (moveInCycle < 2) {
-            const colIndex = pickVerticalColumnIndex(activeCols.length);
-            await moveColumnUp(colIndex, MOVE_DURATION_MS);
-        } else {
-            const direction = Math.random() < 0.5 ? -1 : 1;
-            await moveAllColumnsHorizontal(direction, MOVE_DURATION_MS);
+            const moveInCycle = moveIndex % 3;
+
+            if (moveInCycle < 2) {
+                const colIndex = pickVerticalColumnIndex(activeCols.length);
+                await moveColumnUp(colIndex, MOVE_DURATION_MS);
+            } else {
+                const direction = Math.random() < 0.5 ? -1 : 1;
+                await moveAllColumnsHorizontal(direction, MOVE_DURATION_MS);
+            }
+
+            moveIndex++;
+        } catch (error) {
+            console.error('Hero sequence:', error);
+        } finally {
+            sequenceTimer = setTimeout(runSequence, PAUSE_BETWEEN_MOVES);
         }
-
-        moveIndex++;
-        sequenceTimer = setTimeout(runSequence, PAUSE_BETWEEN_MOVES);
     }
 
     function stopSequence() {
@@ -835,7 +855,14 @@ window.addEventListener('scroll', () => {
         })
         .then(() => {
             finishHeroReveal();
-            startSequence();
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    measureSteps();
+                    syncAllColumnPositions();
+                    refreshAllRowTracks();
+                    startSequence();
+                });
+            });
         })
         .catch(error => {
             console.error('Hero grid:', error);
