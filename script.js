@@ -138,7 +138,7 @@ window.addEventListener('scroll', () => {
     const GRID_GAP = 8;
     const EASE_MOVE = 'cubic-bezier(0.22, 1, 0.36, 1)';
     const ROWS_DESKTOP = 4;
-    const ROWS_MOBILE = 5;
+    const ROWS_MOBILE = 4;
     const MOBILE_BREAKPOINT = 768;
     const FILLER_ROWS = 2;
     const ORDERED_HOLD = 3000;
@@ -152,22 +152,7 @@ window.addEventListener('scroll', () => {
         return window.innerWidth <= MOBILE_BREAKPOINT ? ROWS_MOBILE : ROWS_DESKTOP;
     }
 
-    const IMAGE_POOL = [
-        'new_header_caballero.png',
-        'new_ueno.jpg',
-        'new_chandonctand.png',
-        'torilla_ueno.png',
-        'header_luiscorrea.jpg',
-        'new_header_youngblood.png',
-        'header_aperol.jpeg',
-        'new_caballerodelaorden.png',
-        'new_youngblood_box.png',
-        'hedaer_luiscorreo.jpg',
-        'header_trotilla.jpg',
-        'header_youngblood.jpg',
-        'header_youngblood2.jpg',
-        'new_header_youngbloody.png'
-    ];
+    let IMAGE_POOL = [];
 
     const colState = new WeakMap();
     const rowState = {};
@@ -190,20 +175,127 @@ window.addEventListener('scroll', () => {
     }
 
     function imgPath(file) {
-        return `imagenes/${file}`;
+        return `imagenes/hero/${encodeURIComponent(file)}`;
+    }
+
+    async function loadImagePool() {
+        const response = await fetch('imagenes/hero/manifest.json');
+        if (!response.ok) {
+            throw new Error('No se pudo cargar imagenes/hero/manifest.json');
+        }
+
+        const data = await response.json();
+        const images = Array.isArray(data) ? data : data.images;
+
+        if (!Array.isArray(images) || images.length === 0) {
+            throw new Error('El manifest del hero no tiene imágenes');
+        }
+
+        IMAGE_POOL = images;
+    }
+
+    function shuffleArray(items) {
+        const shuffled = [...items];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    }
+
+    function pickUniqueImage(excludeSet) {
+        const available = IMAGE_POOL.filter(img => !excludeSet.has(img));
+        if (!available.length) {
+            return IMAGE_POOL[Math.floor(Math.random() * IMAGE_POOL.length)];
+        }
+        return available[Math.floor(Math.random() * available.length)];
+    }
+
+    function getMatrixUsedExcept(colNum, dataRow, extraExclude = new Set()) {
+        const used = new Set(extraExclude);
+        for (let c = 0; c < COLS; c++) {
+            for (let r = 0; r < rows; r++) {
+                if (c === colNum && r === dataRow) continue;
+                used.add(imageMatrix[c][r]);
+            }
+        }
+        return used;
+    }
+
+    function pickReplacementImage(colNum, dataRow, extraExclude = new Set()) {
+        return pickUniqueImage(getMatrixUsedExcept(colNum, dataRow, extraExclude));
     }
 
     function buildImageMatrix() {
+        const shuffled = shuffleArray(IMAGE_POOL);
         const matrix = [];
-        let i = 0;
+        let cursor = 0;
+
         for (let c = 0; c < COLS; c++) {
             matrix[c] = [];
+            const usedInCol = new Set();
+
             for (let r = 0; r < rows; r++) {
-                matrix[c][r] = IMAGE_POOL[i % IMAGE_POOL.length];
-                i++;
+                let picked = null;
+
+                for (let i = 0; i < shuffled.length; i++) {
+                    const candidate = shuffled[(cursor + i) % shuffled.length];
+                    if (!usedInCol.has(candidate)) {
+                        picked = candidate;
+                        cursor = (cursor + i + 1) % shuffled.length;
+                        break;
+                    }
+                }
+
+                if (!picked) {
+                    picked = shuffled[cursor % shuffled.length];
+                    cursor++;
+                }
+
+                usedInCol.add(picked);
+                matrix[c][r] = picked;
             }
         }
+
         return matrix;
+    }
+
+    function ensureUniqueLitImages(entries) {
+        const seen = new Set();
+
+        entries.forEach(({ cell, colNum, dataRow }) => {
+            let image = imageMatrix[colNum][dataRow];
+
+            if (seen.has(image)) {
+                image = pickReplacementImage(colNum, dataRow, seen);
+                imageMatrix[colNum][dataRow] = image;
+                const secondary = pickReplacementImage(colNum, dataRow, new Set([...seen, image]));
+                applyCellImages(cell, image, secondary);
+            }
+
+            seen.add(image);
+        });
+    }
+
+    function getVisibleColumnEntries(colEl) {
+        const colNum = parseInt(colEl.dataset.col, 10);
+        const entries = [];
+
+        for (let vr = 0; vr < rows; vr++) {
+            const cell = getCellsInVisualRow(vr).find(
+                rowCell => rowCell.closest('.grid-column') === colEl
+            );
+
+            if (cell) {
+                entries.push({
+                    cell,
+                    colNum,
+                    dataRow: parseInt(cell.dataset.row, 10)
+                });
+            }
+        }
+
+        return entries;
     }
 
     function getDupCell(cell) {
@@ -252,18 +344,6 @@ window.addEventListener('scroll', () => {
         });
     }
 
-    function getAdjacentImage(file, direction) {
-        const idx = IMAGE_POOL.indexOf(file);
-        const len = IMAGE_POOL.length;
-        if (idx === -1) {
-            return IMAGE_POOL[Math.floor(Math.random() * len)];
-        }
-        const nextIdx = direction < 0
-            ? (idx + 1) % len
-            : (idx - 1 + len) % len;
-        return IMAGE_POOL[nextIdx];
-    }
-
     function getCellInColumn(colEl, dataRow) {
         const track = colEl.querySelector('.grid-track-v');
         return track?.querySelector(`.grid-cell:not(.grid-cell--dup)[data-row="${dataRow}"]`) || null;
@@ -299,7 +379,7 @@ window.addEventListener('scroll', () => {
             const inner = document.createElement('div');
             inner.className = 'grid-cell-inner';
             const img = document.createElement('img');
-            img.src = `imagenes/${src}`;
+            img.src = imgPath(src);
             img.alt = '';
             inner.appendChild(img);
             hTrack.appendChild(inner);
@@ -530,21 +610,19 @@ window.addEventListener('scroll', () => {
         });
     }
 
-    function prepareCellHorizontalScroll(cell, colNum, dataRow, direction) {
+    function prepareCellHorizontalScroll(cell, colNum, dataRow, direction, newImage) {
         const current = imageMatrix[colNum][dataRow];
 
         if (direction < 0) {
-            const next = getAdjacentImage(current, -1);
-            applyCellImages(cell, current, next);
-            return { cell, colNum, dataRow, newImage: next, fromX: 0, toX: -steps.stepX };
+            applyCellImages(cell, current, newImage);
+            return { cell, colNum, dataRow, newImage, fromX: 0, toX: -steps.stepX };
         }
 
-        const prev = getAdjacentImage(current, 1);
-        applyCellImages(cell, prev, current);
+        applyCellImages(cell, newImage, current);
         [cell, getDupCell(cell)].filter(Boolean).forEach(c => {
             setTransform(c.querySelector('.grid-track-h'), -steps.stepX, 0);
         });
-        return { cell, colNum, dataRow, newImage: prev, fromX: -steps.stepX, toX: 0 };
+        return { cell, colNum, dataRow, newImage, fromX: -steps.stepX, toX: 0 };
     }
 
     function moveColumnUp(colIndex, durationMs) {
@@ -560,6 +638,7 @@ window.addEventListener('scroll', () => {
         const toY = y - steps.stepY;
 
         clearAllLit();
+        ensureUniqueLitImages(getVisibleColumnEntries(col));
         setColumnLit(col, true);
 
         return animateTransform(track, 0, y, 0, toY, durationMs).then(() => {
@@ -574,9 +653,12 @@ window.addEventListener('scroll', () => {
     function moveAllColumnsHorizontal(direction, durationMs) {
         const columns = getActiveColumns();
         const usedRows = new Set();
+        const reservedImages = new Set();
         const scrolls = [];
 
         clearAllLit();
+
+        const litEntries = [];
 
         columns.forEach(col => {
             const colNum = parseInt(col.dataset.col, 10);
@@ -584,8 +666,17 @@ window.addEventListener('scroll', () => {
             const cell = getCellInColumn(col, dataRow);
             if (!cell) return;
 
+            litEntries.push({ cell, colNum, dataRow });
+        });
+
+        ensureUniqueLitImages(litEntries);
+
+        litEntries.forEach(({ cell, colNum, dataRow }) => {
+            const newImage = pickReplacementImage(colNum, dataRow, reservedImages);
+            reservedImages.add(newImage);
+
             setSingleCellLit(cell, true);
-            scrolls.push(prepareCellHorizontalScroll(cell, colNum, dataRow, direction));
+            scrolls.push(prepareCellHorizontalScroll(cell, colNum, dataRow, direction, newImage));
         });
 
         if (!scrolls.length) return Promise.resolve();
@@ -600,9 +691,11 @@ window.addEventListener('scroll', () => {
         ).then(() => {
             scrolls.forEach(({ cell, colNum, dataRow, newImage }) => {
                 imageMatrix[colNum][dataRow] = newImage;
-                applyCellImages(cell, newImage, getAdjacentImage(newImage, -1));
+                const secondary = pickReplacementImage(colNum, dataRow, new Set([newImage]));
+                applyCellImages(cell, newImage, secondary);
                 setSingleCellLit(cell, false);
             });
+            refreshAllRowTracks();
         });
     }
 
@@ -666,8 +759,15 @@ window.addEventListener('scroll', () => {
         });
     }
 
-    buildGrid();
-    initGridLayout().then(() => startSequence());
+    loadImagePool()
+        .then(() => {
+            buildGrid();
+            return initGridLayout();
+        })
+        .then(() => startSequence())
+        .catch(error => {
+            console.error('Hero grid:', error);
+        });
 
     let resizeTimer;
     window.addEventListener('resize', () => {
