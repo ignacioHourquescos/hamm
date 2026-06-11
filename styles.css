@@ -326,7 +326,7 @@ body {
     animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
 }
 
-.hero--intro .hero-collage {
+.hero--pending .hero-collage {
     opacity: 0;
     visibility: hidden;
 }

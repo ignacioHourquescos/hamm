@@ -146,10 +146,9 @@ window.addEventListener('scroll', () => {
 
     const playHeroIntro = shouldPlayHeroIntro();
 
+    heroSection?.classList.add('hero--pending');
     if (playHeroIntro) {
-        heroSection?.classList.add('hero--intro');
-    } else {
-        heroSection?.classList.add('hero--ready');
+        heroSection.classList.add('hero--intro');
     }
     const HERO_SUBTITLE_DELAY_MS = 300;
 
@@ -213,12 +212,6 @@ window.addEventListener('scroll', () => {
         IMAGE_POOL = images;
     }
 
-    function getMatrixImageFiles(matrix) {
-        const files = new Set();
-        matrix.forEach(col => col.forEach(file => files.add(file)));
-        return [...files];
-    }
-
     function preloadHeroImages(files, concurrency = 8) {
         if (!files.length) return Promise.resolve();
 
@@ -243,18 +236,6 @@ window.addEventListener('scroll', () => {
         return Promise.all(workers);
     }
 
-    function preloadHeroImagesIdle(files) {
-        if (!files.length) return;
-
-        const run = () => preloadHeroImages(files, 3);
-
-        if ('requestIdleCallback' in window) {
-            requestIdleCallback(run, { timeout: 4000 });
-        } else {
-            setTimeout(run, 1200);
-        }
-    }
-
     function runHeroIntro() {
         if (!heroSection || !playHeroIntro) return;
 
@@ -266,7 +247,7 @@ window.addEventListener('scroll', () => {
     function finishHeroReveal() {
         if (!heroSection) return;
 
-        heroSection.classList.remove('hero--intro', 'hero--subtitle-in');
+        heroSection.classList.remove('hero--pending', 'hero--intro', 'hero--subtitle-in');
         heroSection.classList.add('hero--ready');
 
         if (playHeroIntro) {
@@ -848,13 +829,8 @@ window.addEventListener('scroll', () => {
             buildGrid();
             runHeroIntro();
 
-            const priorityFiles = getMatrixImageFiles(imageMatrix);
-            const restFiles = IMAGE_POOL.filter(file => !priorityFiles.includes(file));
-
-            preloadHeroImagesIdle(restFiles);
-
             return Promise.all([
-                preloadHeroImages(priorityFiles, 8),
+                preloadHeroImages(IMAGE_POOL, 8),
                 initGridLayout()
             ]);
         })
