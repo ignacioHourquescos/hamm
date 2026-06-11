@@ -151,12 +151,7 @@ window.addEventListener('scroll', () => {
     } else {
         heroSection?.classList.add('hero--ready');
     }
-    const HERO_LETTER_STAGGER_MS = 450;
-    const HERO_LETTER_COUNT = 4;
-    const HERO_LETTER_ANIM_MS = 550;
-    const HERO_SUBTITLE_DELAY_MS = (HERO_LETTER_COUNT - 1) * HERO_LETTER_STAGGER_MS + HERO_LETTER_ANIM_MS + 120;
-    const HERO_SUBTITLE_ANIM_MS = 650;
-    const HERO_GRID_REVEAL_MS = HERO_SUBTITLE_DELAY_MS + HERO_SUBTITLE_ANIM_MS + 180;
+    const HERO_SUBTITLE_DELAY_MS = 300;
 
     const COLS = 8;
     const GRID_GAP = 8;
@@ -218,36 +213,65 @@ window.addEventListener('scroll', () => {
         IMAGE_POOL = images;
     }
 
-    function preloadHeroImages(files) {
-        return Promise.all(
-            files.map(file => new Promise(resolve => {
-                const img = new Image();
-                img.decoding = 'async';
-                img.onload = resolve;
-                img.onerror = resolve;
-                img.src = imgPath(file);
-            }))
-        );
+    function getMatrixImageFiles(matrix) {
+        const files = new Set();
+        matrix.forEach(col => col.forEach(file => files.add(file)));
+        return [...files];
+    }
+
+    function preloadHeroImages(files, concurrency = 8) {
+        if (!files.length) return Promise.resolve();
+
+        const queue = [...files];
+        const workerCount = Math.min(concurrency, queue.length);
+
+        const workers = Array.from({ length: workerCount }, () => (async () => {
+            while (queue.length) {
+                const file = queue.shift();
+                if (!file) break;
+
+                await new Promise(resolve => {
+                    const img = new Image();
+                    img.decoding = 'async';
+                    img.onload = resolve;
+                    img.onerror = resolve;
+                    img.src = imgPath(file);
+                });
+            }
+        })());
+
+        return Promise.all(workers);
+    }
+
+    function preloadHeroImagesIdle(files) {
+        if (!files.length) return;
+
+        const run = () => preloadHeroImages(files, 3);
+
+        if ('requestIdleCallback' in window) {
+            requestIdleCallback(run, { timeout: 4000 });
+        } else {
+            setTimeout(run, 1200);
+        }
     }
 
     function runHeroIntro() {
-        if (!heroSection || !playHeroIntro) {
-            return Promise.resolve();
-        }
+        if (!heroSection || !playHeroIntro) return;
 
-        const subtitleTimer = setTimeout(() => {
+        setTimeout(() => {
             heroSection.classList.add('hero--subtitle-in');
         }, HERO_SUBTITLE_DELAY_MS);
+    }
 
-        return new Promise(resolve => {
-            setTimeout(() => {
-                clearTimeout(subtitleTimer);
-                heroSection.classList.remove('hero--intro', 'hero--subtitle-in');
-                heroSection.classList.add('hero--ready');
-                sessionStorage.setItem(HERO_INTRO_KEY, '1');
-                resolve();
-            }, HERO_GRID_REVEAL_MS);
-        });
+    function finishHeroReveal() {
+        if (!heroSection) return;
+
+        heroSection.classList.remove('hero--intro', 'hero--subtitle-in');
+        heroSection.classList.add('hero--ready');
+
+        if (playHeroIntro) {
+            sessionStorage.setItem(HERO_INTRO_KEY, '1');
+        }
     }
 
     function shuffleArray(items) {
@@ -435,6 +459,10 @@ window.addEventListener('scroll', () => {
             const inner = document.createElement('div');
             inner.className = 'grid-cell-inner';
             const img = document.createElement('img');
+            img.decoding = 'async';
+            if (!isDup && !isFiller && copy === 0) {
+                img.fetchPriority = 'high';
+            }
             img.src = imgPath(src);
             img.alt = '';
             inner.appendChild(img);
@@ -817,22 +845,26 @@ window.addEventListener('scroll', () => {
 
     loadImagePool()
         .then(() => {
-            const introPromise = runHeroIntro();
-            const preloadPromise = preloadHeroImages(IMAGE_POOL);
-
             buildGrid();
+            runHeroIntro();
+
+            const priorityFiles = getMatrixImageFiles(imageMatrix);
+            const restFiles = IMAGE_POOL.filter(file => !priorityFiles.includes(file));
+
+            preloadHeroImagesIdle(restFiles);
 
             return Promise.all([
-                introPromise,
-                preloadPromise,
+                preloadHeroImages(priorityFiles, 8),
                 initGridLayout()
             ]);
         })
-        .then(() => startSequence())
+        .then(() => {
+            finishHeroReveal();
+            startSequence();
+        })
         .catch(error => {
             console.error('Hero grid:', error);
-            heroSection?.classList.remove('hero--intro', 'hero--subtitle-in');
-            heroSection?.classList.add('hero--ready');
+            finishHeroReveal();
         });
 
     let resizeTimer;
