@@ -159,7 +159,6 @@ window.addEventListener('scroll', () => {
     const ROWS_MOBILE = 4;
     const MOBILE_BREAKPOINT = 768;
     const FILLER_ROWS = 2;
-    const ORDERED_HOLD = 3000;
     const MOVE_DURATION_MS = 1400;
     const PAUSE_BETWEEN_MOVES = 200;
 
@@ -803,7 +802,7 @@ window.addEventListener('scroll', () => {
 
     function startSequence() {
         stopSequence();
-        sequenceTimer = setTimeout(runSequence, ORDERED_HOLD);
+        runSequence();
     }
 
     function initGridLayout() {
